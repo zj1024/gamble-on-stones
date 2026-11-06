@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101914">
+  <meta name="description" content="赌石四人局：你控制一名玩家，与三位拥有独立判断的电脑完成六轮暗拍、开窗、接盘与切石。单文件离线试玩。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 30 16 16 30 2 16Z' fill='%23b3deb6'/%3E%3Cpath d='M16 9 23 16 16 23 9 16Z' fill='%23101914'/%3E%3C/svg%3E">
+  <title>赌石四人局 · 六轮人机试玩</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101914;--panel:#18241c;--panel2:#203025;--line:#35483a;--text:#eff2e9;--muted:#afbdad;--jade:#b3deb6;--gold:#e6bf82;--red:#f2aa98;--blue:#acc9e9;--purple:#d1b9e5;--sans:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;--serif:"Songti SC","STSong",serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 45% 5%,#253b2760,transparent 54%),var(--bg);color:var(--text);font:14px/1.7 var(--sans);-webkit-font-smoothing:antialiased}button,input,select{font:inherit}button,a,input,summary{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:default}a{color:var(--jade)}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:4px}h1,h2,h3,h4,p{margin:0}h1,h2,h3{line-height:1.35;font-weight:550}h2{font-family:var(--serif);font-size:28px}h3{font-size:17px}h4{font-size:13px;font-weight:550}p{margin-bottom:12px}small{font-size:11px}strong{font-weight:600}[hidden]{display:none!important}.wrap{width:min(1420px,calc(100% - 56px));margin:auto}.muted{color:var(--muted)}.gold{color:var(--gold)}.positive{color:var(--jade)}.negative{color:var(--red)}.number{font-variant-numeric:tabular-nums}.eyebrow{color:var(--gold);font-size:10px;letter-spacing:.17em;text-transform:uppercase}.button{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:40px;padding:9px 15px;border:1px solid var(--line);border-radius:8px;color:var(--text);background:transparent;font-size:12px;line-height:1.5;transition:background .15s,border-color .15s}.button:hover:not(:disabled){background:#2c4030;border-color:#799775}.button.primary{background:var(--jade);border-color:var(--jade);color:#17241b;font-weight:650}.button.primary:hover:not(:disabled){background:#c8edca}.button.amber{background:var(--gold);border-color:var(--gold);color:#2b2217;font-weight:650}.button.small{min-height:31px;font-size:11px;padding:5px 9px}.button.full{width:100%}.button:disabled{opacity:.38}.button.ghost{border-color:transparent;color:var(--muted)}.button.selected{border-color:var(--jade);background:#2f4a32;color:var(--jade)}.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.pill{display:inline-flex;gap:6px;align-items:center;padding:3px 8px;border:1px solid var(--line);border-radius:30px;color:var(--muted);font-size:10px;line-height:1.6;white-space:nowrap}.pill.green{border-color:#608760;color:var(--jade);background:#25402b}.pill.amber{border-color:#7b633f;color:var(--gold);background:#393022}.pill.blue{color:var(--blue);border-color:#506c82;background:#223442}.pill.red{color:var(--red);border-color:#805447;background:#392922}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;min-width:0}.panel-head{padding:17px 19px;border-bottom:1px solid var(--line)}.panel-head h3{font-size:14px}.subtle{font-size:11px;color:var(--muted);line-height:1.8}.divider{border:0;border-top:1px solid var(--line);margin:17px 0}.empty{font-size:12px;color:var(--muted);padding:16px 0;line-height:1.9}.money{display:flex;gap:10px;align-items:center;background:#111d15;border:1px solid #668465;border-radius:8px;padding:8px 12px;margin:10px 0}.money span{font-size:11px;color:var(--gold);white-space:nowrap}.money input{border:0;outline:none;min-width:0;width:100%;color:var(--text);background:transparent;font-size:29px;font-weight:550;font-variant-numeric:tabular-nums}.money:focus-within{outline:2px solid var(--gold);outline-offset:2px}.field{display:block;background:#142019;border:1px solid #4b6450;color:var(--text);border-radius:7px;min-height:40px;padding:8px 11px;width:100%;font-size:14px}.label{font-size:12px;display:block;color:#d1ddcb;margin-bottom:7px}.error{font-size:12px;color:var(--red);min-height:19px;margin:7px 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+    .topbar{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:11px;font-size:14px;letter-spacing:.08em;font-weight:600}.brand-mark{width:25px;height:25px;border:1px solid var(--jade);background:linear-gradient(135deg,#9dcca555,#17281c);transform:rotate(45deg);display:inline-block;position:relative}.brand-mark:after{content:"";position:absolute;inset:5px;border:1px solid #b3deb666}.topbar .actions{gap:7px}.top-status{color:var(--muted);font-size:11px;display:flex;gap:9px;align-items:center}.online-dot{display:inline-block;width:6px;height:6px;background:var(--jade);border-radius:50%}.app{padding:25px 0 30px}.game-meta{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:15px}.game-meta h1{font-size:23px;font-family:var(--serif)}.game-meta h1 small{font:12px var(--sans);color:var(--muted);margin-left:12px}.game-seed{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.03em}.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}.score{border:1px solid var(--line);background:#19261c;border-radius:10px;padding:13px 16px;display:grid;grid-template-columns:35px 1fr;gap:11px;position:relative;min-width:0}.score.you{background:#233b29;border-color:#719775}.score.owner{box-shadow:inset 0 -2px 0 var(--player-color)}.avatar{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--player-color,var(--jade)) 15%,#1a231e);color:var(--player-color,var(--jade));font-size:12px;font-weight:650;border:1px solid color-mix(in srgb,var(--player-color,var(--jade)) 27%,#233327)}.score-name{font-size:12px;color:#d5dfd0;display:flex;justify-content:space-between;align-items:center;gap:5px}.score .cash{font-size:24px;line-height:1.5;letter-spacing:.015em;font-weight:550}.score .note{font-size:10px;color:var(--muted)}.phase-track{display:grid;grid-template-columns:repeat(7,1fr);padding:10px 0 16px;margin-bottom:5px;gap:5px}.phase{font-size:11px;color:#81937f;padding:9px 7px;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}.phase.active{color:var(--jade);background:#29402c}.phase.done{color:#bfceba}.phase b{font-size:10px;font-weight:500;opacity:.65}.game-board{display:grid;grid-template-columns:238px minmax(310px,1fr) 345px;gap:14px;align-items:stretch}.notebook{display:flex;flex-direction:column}.notebook-body{padding:17px 17px 20px;flex:1}.question-card{background:#2f3021;border:1px solid #625a37;border-radius:8px;padding:13px 12px;margin-bottom:18px}.question-card .eyebrow{font-size:9px;letter-spacing:.08em;margin-bottom:7px}.question-card h4{font-size:13px;line-height:1.8;font-weight:500}.question-card small{color:#bfb99e;font-size:10px;display:block;margin-top:7px}.clue{padding:12px 11px;background:#263b2a;border-left:2px solid var(--jade);border-radius:0 7px 7px 0;margin:10px 0;font-size:12px}.clue-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:10px;color:#b4c6ad;margin-bottom:5px}.clue .reading{font-size:14px;color:#e4ecdc;margin-bottom:7px}.clue .reading strong{font-size:19px;color:var(--jade);margin-right:5px}.clue .button{font-size:10px;padding:4px 7px;min-height:27px}.speech-controls{display:grid;gap:7px;margin-top:10px}.speech-controls .button{font-size:11px;text-align:left;justify-content:flex-start}.notebook .help-text{font-size:10px;line-height:1.9;color:#91a38e;margin-top:16px}.stone-panel{position:relative;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 40%,#31482f88,transparent 65%),#152119;overflow:hidden}.stone-top{padding:17px 19px 0;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted);gap:10px}.stone-container{position:relative;width:100%;aspect-ratio:520/365;max-height:380px;min-height:260px;display:flex;align-items:center;justify-content:center}.stone-container svg{display:block;width:100%;height:100%;max-height:380px}.cell-overlay{position:absolute;left:27.8%;right:27.8%;top:24.5%;bottom:22%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}.cell-button{background:transparent;border:1px solid #d0dac82e;color:#d8dfc9;position:relative;padding:0;min-width:0;min-height:0;font-size:12px;text-shadow:0 1px 5px #0009;transition:background .15s}.cell-button:hover{background:#d3ecc019}.cell-button.selected{outline:1px solid #efd6a0;outline-offset:-3px;background:#e6bf8217;color:#fff4d7}.cell-button.known:after{content:"";position:absolute;width:4px;height:4px;background:#b5e4bd;border-radius:50%;bottom:6px;left:calc(50% - 2px)}.stone-title{position:absolute;left:20px;bottom:9px;font-size:10px;color:#9eb297;letter-spacing:.06em}.stone-readout{padding:9px 18px 15px;border-bottom:1px solid var(--line);text-align:center;font-size:11px;color:#c7d5be;min-height:63px}.stone-readout .loc{color:var(--gold);font-size:12px;margin-right:9px}.readout-item{display:inline-block;white-space:nowrap;margin:0 5px}.readout-item em{font-style:normal;color:var(--muted);font-size:10px;margin-right:5px}.surface{padding:14px 18px;display:flex;flex-wrap:wrap;justify-content:center;gap:7px}.surface .pill{font-size:10px}.window-readout{margin:0 17px 15px;padding:11px 13px;border-radius:7px;background:#263c29;border:1px solid #4b6947;font-size:11px;color:#d7e4cd}.window-readout strong{color:var(--jade)}.stone-legend{font-size:10px;color:#94a48f;text-align:center;padding:0 15px 14px;margin-top:auto}.cutting-sweep{position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 35%,#eef9d740 49%,#fff8cfaa 50%,transparent 53%);transform:translateX(-90%);animation:sweep .58s ease-in-out forwards}.cutting-label{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:var(--gold);font-size:12px;white-space:nowrap}@keyframes sweep{to{transform:translateX(90%)}}
+    .action-panel{display:flex;flex-direction:column}.action-body{padding:22px 21px;flex:1}.turn-caption{font-size:10px;letter-spacing:.1em;color:var(--gold);margin-bottom:10px}.action-panel h2{font-size:26px;line-height:1.4;margin-bottom:13px}.action-panel .intro{font-size:12px;line-height:1.9;color:#b9c9b2;margin-bottom:17px}.action-footer{padding:14px 20px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);line-height:1.8;background:#1c2b20;border-radius:0 0 13px 13px}.feature-options{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0 13px}.feature-options .button{padding:8px 4px;font-size:11px;min-height:37px}.callout{padding:13px 14px;border-radius:8px;background:#273d2a;border:1px solid #54774e;font-size:12px;line-height:1.9;margin:13px 0}.callout.amber{background:#342f21;border-color:#766140}.callout .big{font-size:30px;font-weight:550;line-height:1.55;display:block;color:var(--jade)}.callout p{margin:4px 0 0}.choice-list{display:grid;gap:8px;margin:12px 0 16px}.choice{display:flex;align-items:flex-start;gap:10px;text-align:left;border:1px solid var(--line);border-radius:8px;background:#1c2a20;color:var(--text);padding:12px;width:100%}.choice:hover:not(:disabled){border-color:#76946e;background:#253c29}.choice.selected{border-color:var(--jade);background:#2b4430}.choice .index{font-size:10px;color:var(--gold);line-height:23px;min-width:15px}.choice b{font-size:12px;display:block;font-weight:550}.choice small{display:block;color:var(--muted);font-size:10px;line-height:1.75;margin-top:3px}.choice:disabled{opacity:.65;cursor:default}.answer-options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0}.answer-options .button{min-height:48px}.sealed{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;margin:8px 0;border:1px solid var(--line);border-radius:7px;font-size:11px}.sealed .right{color:var(--muted);font-size:10px}.estimate-tip{font-size:10px;line-height:1.85;color:#9fb19b;margin:12px 0}.bottom-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;margin-top:14px}.feed{padding:0;min-width:0}.feed-list{padding:8px 18px;max-height:252px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#53694e transparent}.feed-item{display:grid;grid-template-columns:25px 1fr;gap:9px;padding:10px 0;border-bottom:1px solid #2c4031}.feed-item:last-child{border-bottom:0}.feed-item .avatar{width:24px;height:24px;font-size:9px}.feed-item.system{grid-template-columns:25px 1fr}.system-icon{color:var(--gold);font-size:13px;text-align:center;line-height:24px}.feed-item .who{font-size:10px;margin-bottom:3px;color:#dce7d5;display:flex;gap:8px;align-items:center}.feed-item .who span{font-size:9px;color:#9eaf98}.feed-item .text{color:#bccbb5;font-size:11px;line-height:1.8}.feed-item.evidence .text{color:var(--jade)}.feed-item.trade .text,.feed-item.result .text{color:var(--gold)}.mini-history{padding:13px 18px;max-height:252px;overflow-y:auto;scrollbar-width:thin}.history-row{display:grid;grid-template-columns:42px 1fr 68px;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--line);font-size:11px}.history-row:last-child{border:0}.history-row .r{color:var(--gold);font-size:10px}.history-row .desc{color:var(--muted);font-size:10px}.history-row .gain{text-align:right;font-variant-numeric:tabular-nums;font-weight:550}.hint-strip{padding:15px 0 0;font-size:10px;color:#8fa18c;display:flex;justify-content:space-between;gap:20px}.hint-strip a{color:#b8cdb3;text-decoration:none;border-bottom:1px solid #4e6c4b}
+    .round-result{padding:23px 25px;margin-top:16px}.round-result h3{font-family:var(--serif);font-size:24px}.round-result .topline{display:flex;justify-content:space-between;align-items:center;gap:25px;margin-bottom:17px}.result-gain{font-size:31px;font-weight:550;font-variant-numeric:tabular-nums;line-height:1.4}.result-caption{font-size:10px;color:var(--muted)}.result-columns{display:grid;grid-template-columns:1.4fr 1fr;gap:30px}.table-scroll{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}.table th{color:var(--muted);font-size:10px;font-weight:500}.table th:first-child,.table td:first-child{text-align:left}.table tr:last-child td{border-bottom:0}.cut-compare{display:grid;gap:7px}.compare-row{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;border:1px solid var(--line);border-radius:7px;font-size:11px}.compare-row.chosen{border-color:#86a46f;background:#263d2a}.compare-row strong{color:var(--jade);font-variant-numeric:tabular-nums;font-weight:550}.audit{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}.audit summary{font-size:12px;cursor:pointer;color:#c7d8be}.audit-list{display:grid;grid-template-columns:repeat(3,1fr);gap:17px;margin-top:13px}.audit-list p{font-size:11px;color:var(--muted);margin:6px 0 0}.audit-list strong{font-size:11px}.audit-list .claim-note{font-size:10px;color:#9cad96}.end-screen{padding:33px 0}.end-hero{display:flex;justify-content:space-between;gap:40px;align-items:center;padding:34px 35px;background:radial-gradient(ellipse at 80% 50%,#52664455,transparent 70%),#1d2d20;border:1px solid #6c8459;border-radius:15px;margin-bottom:26px}.end-hero h1{font-family:var(--serif);font-size:44px;line-height:1.3;margin:12px 0}.end-hero .result-score{font-size:40px;color:var(--jade);line-height:1.4;font-weight:550}.end-hero p{font-size:12px;color:var(--muted)}.final-ranks{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:23px}.final-rank{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:19px}.final-rank.winner{border-color:#adc587;background:#2b402a}.final-rank .rank-label{font-size:10px;color:var(--gold);margin-bottom:12px}.final-rank .name{display:flex;gap:9px;align-items:center;margin-bottom:11px;font-size:13px}.final-rank .amount{font-size:28px;font-weight:550}.final-rank .small-note{font-size:10px;color:var(--muted)}.end-columns{display:grid;grid-template-columns:1.25fr 1fr;gap:17px}.end-section{padding:24px}.end-section h3{margin-bottom:16px}.chart{width:100%;height:auto;display:block}.end-history{margin-top:19px;padding:23px}.end-history .table{min-width:780px}.end-history h3{margin-bottom:13px}.end-notes{font-size:11px;color:var(--muted);line-height:1.9}.stat-line{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:12px}.stat-line strong{color:var(--jade);font-weight:500}.stat-line:last-child{border:0}
+    .lobby{padding:55px 0 28px;display:grid;grid-template-columns:1.05fr 1fr;gap:70px;align-items:center;min-height:calc(100vh - 150px)}.lobby h1{font-family:var(--serif);font-size:clamp(43px,4.6vw,65px);line-height:1.25;letter-spacing:.03em;margin:18px 0 23px}.lobby h1 em{font-style:normal;color:var(--jade)}.lobby .lead{font-size:14px;line-height:1.95;color:#c1ceba;max-width:490px}.lobby .small-rules{display:flex;gap:20px;margin:26px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0}.lobby .small-rules b{font-size:21px;font-weight:550;display:block;line-height:1.5}.lobby .small-rules span{font-size:10px;color:var(--muted)}.seed-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:6px;max-width:420px}.seed-row .field{font-size:12px}.start-actions{margin:16px 0 12px}.lobby .button.primary{min-height:45px;padding:11px 24px;font-size:13px}.lobby-board{padding:28px 25px;background:radial-gradient(ellipse at 50% 20%,#49663f66,transparent 65%),#19261d;border:1px solid var(--line);border-radius:17px}.lobby-stone{width:100%;height:auto;display:block;max-height:290px}.opponent-list{display:grid;gap:0;margin-top:8px}.opponent{display:flex;align-items:center;gap:13px;padding:15px 0;border-top:1px solid var(--line)}.opponent .text{flex:1}.opponent h3{font-size:13px;margin-bottom:3px}.opponent p{font-size:11px;color:var(--muted);margin:0}.opponent .pill{font-size:9px}.lobby-foot{font-size:10px;color:#91a48c;line-height:1.9;margin-top:18px}.page-foot{border-top:1px solid var(--line);padding:17px 0 25px;font-size:10px;color:#82967f;display:flex;justify-content:space-between;gap:20px}.page-foot a{color:#9cb698;text-decoration:none}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:30;padding:11px 18px;background:#283c2b;border:1px solid #7a9c70;color:#edf3e6;border-radius:9px;box-shadow:0 10px 40px #0005;max-width:calc(100% - 32px);font-size:12px}.toast.error-toast{border-color:#c58b72;background:#3c2c24}.dialog{width:min(680px,calc(100% - 30px));max-height:86vh;background:#19271e;border:1px solid #667e5b;border-radius:13px;padding:0;color:var(--text);box-shadow:0 30px 100px #0008}.dialog::backdrop{background:#071009cc;backdrop-filter:blur(5px)}.dialog .dialog-head{display:flex;justify-content:space-between;align-items:center;padding:21px 25px;border-bottom:1px solid var(--line)}.dialog h2{font-size:25px}.dialog-body{padding:24px 25px;overflow:auto}.dialog-body h3{font-size:14px;color:var(--jade);margin:18px 0 9px}.dialog-body h3:first-child{margin-top:0}.dialog-body p,.dialog-body li{font-size:12px;color:#bcccaf;line-height:1.95}.dialog-body ol,.dialog-body ul{padding-left:20px}.dialog-body .legend{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.legend-box{border:1px solid var(--line);padding:12px;border-radius:8px;font-size:11px;color:var(--muted)}.legend-box b{color:var(--gold);display:block;font-weight:500;margin-bottom:5px}
+    @media(max-width:1200px){.wrap{width:calc(100% - 36px)}.game-board{grid-template-columns:210px minmax(250px,1fr) 310px;gap:11px}.action-body{padding:19px 17px}.notebook-body{padding:15px}.stone-container{min-height:240px}.score{padding:12px;gap:9px}.score .cash{font-size:22px}.action-panel h2{font-size:23px}.lobby{gap:40px}.lobby h1{font-size:55px}.stone-legend{font-size:9px}.stone-readout{padding-left:9px;padding-right:9px}.readout-item{margin:0 3px}}
+    @media(max-width:1000px){.game-board{grid-template-columns:minmax(300px,1fr) 340px}.notebook{grid-column:1/-1;grid-row:2;display:block}.notebook-body{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:18px;padding:18px}.notebook .question-card{margin:0}.notebook .help-text{display:none}.notebook .private-title{display:none}.notebook .panel-head{padding:12px 18px}.clue{margin:0 0 8px}.speech-controls{margin-top:0}.stone-panel{grid-column:1}.action-panel{grid-column:2}.stone-container{max-height:350px;min-height:270px}.lobby{gap:28px}.lobby h1{font-size:49px}.lobby-board{padding:22px}.score-name .pill{font-size:9px;padding:2px 5px}.game-meta h1{font-size:21px}.end-hero h1{font-size:36px}.end-columns{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){.wrap{width:calc(100% - 28px)}.topbar{min-height:66px}.brand{font-size:12px;gap:9px}.brand-mark{width:22px;height:22px}.top-status{display:none}.topbar .button{font-size:10px;padding:6px 9px;min-height:32px}.app{padding-top:18px}.game-meta{align-items:flex-start;gap:10px}.game-meta h1{font-size:21px}.game-meta h1 small{display:block;font-size:10px;margin:5px 0 0}.game-seed{font-size:9px;max-width:120px;text-align:right;overflow-wrap:anywhere}.scoreboard{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}.score{padding:11px;grid-template-columns:28px 1fr;gap:8px}.avatar{width:28px;height:28px;font-size:10px}.score-name{font-size:11px}.score .cash{font-size:21px}.score .note{font-size:9px}.score-name .pill{font-size:8px}.phase-track{grid-template-columns:repeat(4,1fr);padding:3px 0 12px;gap:2px}.phase{padding:7px 4px;font-size:10px;gap:5px}.game-board{grid-template-columns:1fr;gap:12px}.stone-panel{grid-column:1;grid-row:1}.action-panel{grid-column:1;grid-row:2}.notebook{grid-column:1;grid-row:3}.notebook-body{display:grid;grid-template-columns:1fr;gap:15px;padding:17px}.notebook .private-title{display:block}.notebook .question-card{margin:0}.speech-controls{grid-template-columns:1fr 1fr 1fr;gap:6px}.speech-controls .button{font-size:10px;padding:7px 4px;text-align:center;justify-content:center;min-height:38px}.stone-container{aspect-ratio:520/350;min-height:0;max-height:330px}.cell-overlay{left:27.8%;right:27.8%;top:24.5%;bottom:22%}.stone-readout{min-height:58px;padding:8px 12px 13px}.stone-readout .loc{display:block;font-size:11px;margin:0 0 3px}.stone-top{padding:14px 16px 0;font-size:10px}.surface{padding:11px 13px}.stone-legend{padding-bottom:12px;font-size:9px}.action-body{padding:22px 20px}.action-panel h2{font-size:28px;margin-bottom:13px}.action-panel .intro{font-size:13px}.action-footer{padding:13px 19px;font-size:10px}.bottom-grid{grid-template-columns:1fr;gap:12px}.feed-list{max-height:260px}.mini-history{max-height:205px}.hint-strip{display:block;font-size:9px}.hint-strip span{display:block;margin:5px 0}.round-result{padding:20px 17px}.round-result .topline{gap:15px;align-items:flex-start}.round-result h3{font-size:21px}.result-gain{font-size:26px}.result-columns{grid-template-columns:1fr;gap:22px}.audit-list{grid-template-columns:1fr;gap:14px}.lobby{grid-template-columns:1fr;padding:35px 0 20px;gap:30px;min-height:0}.lobby h1{font-size:49px;margin-top:16px}.lobby .lead{font-size:13px}.lobby .small-rules{justify-content:space-between;gap:12px;margin:22px 0}.lobby .small-rules b{font-size:20px}.lobby-board{padding:22px}.lobby-stone{max-height:240px}.opponent{padding:14px 0}.opponent h3{font-size:13px}.page-foot{display:block;font-size:9px;padding:18px 0}.page-foot span{display:block;margin-top:6px}.end-screen{padding-top:8px}.end-hero{padding:25px 22px;display:block}.end-hero h1{font-size:36px}.end-hero .actions{margin-top:22px}.end-hero .result-score{font-size:35px}.final-ranks{grid-template-columns:repeat(2,1fr);gap:8px}.final-rank{padding:15px}.final-rank .amount{font-size:24px}.end-columns{grid-template-columns:1fr}.end-section{padding:20px}.end-history{padding:20px 16px}.dialog .dialog-head{padding:17px 19px}.dialog-body{padding:20px 19px}.dialog-body .legend{grid-template-columns:1fr}.toast{font-size:11px}}
+    @media(max-width:360px){.wrap{width:calc(100% - 24px)}.brand{font-size:11px;letter-spacing:.04em}.topbar .actions{gap:5px}.topbar .button{padding:5px 7px}.lobby h1{font-size:42px}.score{padding:9px;grid-template-columns:23px 1fr;gap:6px}.score .avatar{width:23px;height:23px;font-size:9px}.score-name{font-size:10px}.score .cash{font-size:19px}.score-name .pill{font-size:7px;padding:1px 4px}.stone-container{aspect-ratio:520/365}.stone-top{padding-left:12px;padding-right:12px;font-size:9px}.action-body{padding:20px 17px}.action-panel h2{font-size:25px}.pill{font-size:9px}.cell-button{font-size:10px}.speech-controls{grid-template-columns:1fr}.game-meta h1{font-size:19px}.game-seed{max-width:92px}.seed-row{grid-template-columns:1fr auto}.dialog h2{font-size:22px}.final-rank .name{font-size:11px;gap:6px}}
+    .table-talk{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 3px 12px;margin-bottom:15px}.table-talk-head{display:flex;justify-content:space-between;align-items:center;gap:15px;font-size:10px;color:var(--gold);margin-bottom:7px}.table-talk-head a{font-size:9px;color:var(--muted);text-decoration:none}.table-talk-lines{display:flex;flex-wrap:wrap;gap:8px 25px}.table-talk-line{flex:1 1 240px;font-size:11px;color:#b6c7b0;line-height:1.8}.table-talk-line b{font-size:10px;font-weight:500;margin-right:6px}
+    .stone-container{aspect-ratio:520/365;max-width:560px;max-height:none;min-height:0;align-self:center}.stone-container svg{max-height:none}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:after,*:before{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="wrap topbar"><div class="brand"><span class="brand-mark" aria-hidden="true"></span>赌石四人局</div><div class="top-status"><span class="online-dot" aria-hidden="true"></span>离线人机对战 · 你 + 3位电脑</div><div class="actions"><button class="button" type="button" data-act="help">玩法规则</button><button class="button" type="button" data-act="new">新对局</button></div></header>
+  <main id="app" class="wrap app" aria-label="游戏主界面"></main>
+  <footer class="wrap page-foot"><span>单文件人机试玩 · 原石生成后固定 · 所有金额均为游戏币</span><span>HTML / CSS / JavaScript / SVG · 无需安装或联网</span></footer>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="help-dialog" class="dialog" aria-labelledby="help-title"><div class="dialog-head"><h2 id="help-title">上桌之前，先知道这些。</h2><button class="button small" type="button" data-act="close-help" aria-label="关闭玩法规则">关闭</button></div><div class="dialog-body">
+    <h3>你控制A，另外三位会独立判断。</h3><p>每人初始10000游戏币，共6轮。电脑只使用自己的观察、公开信息和场上发言估价；看不到原石真值。每轮结束清算成现金，最终现金最多者胜出；同现金比鉴料正确次数，仍相同则并列。</p>
+    <h3>一块石头，两次买入机会。</h3><ol><li>看料：选一个区域和特征细查，决定是否公开记录或表达判断。</li><li>暗拍：最高有效价成交，支付自己的报价；需留足500（公窗200 + 加工300）。0表示放弃。</li><li>开窗：初拍买家选择上缘、右侧或底部的一处公窗，公开该位置的色、种、裂。</li><li>复查：所有人都还能私密细查一次，然后重新交流判断。</li><li>接盘：其余三人密封报价，须留300加工费；石主接受最高价或保留，每轮只转手一次。</li><li>鉴料：所有人切割前锁定同一道题的答案，答对+200，答错或跳过无奖励。</li><li>切石：最后持有人选择加工路线，付300加工费并获得实际出货收入。</li></ol>
+    <h3>九个区域，是本Demo的简化原石模型。</h3><p>点击石头上的1—9区选位置。私人打灯每次只揭露一项，公窗揭露所在格的全部三项。绿色填充表示你已知的颜色，未知区域仍保持皮壳。最终揭晓时全部公开。</p><div class="legend"><div class="legend-box"><b>颜色 0—3</b>无明显色 → 浅色 → 明显带色 → 浓色</div><div class="legend-box"><b>种水 0—3</b>粗 → 普通 → 细腻 → 通透</div><div class="legend-box"><b>裂纹 0—2</b>未见裂 → 细裂 → 大裂</div></div>
+    <h3>三种切法有不同条件。</h3><p><strong>保大件：</strong>外圈8格没有大裂且平均种水≥1.5时，可成大件；否则改取小件。<br><strong>分料避裂：</strong>左右两列分开利用，中央带做小件；完整的侧列可做吊坠。<br><strong>追色小件：</strong>优先取最多4格颜色≥2的区域，其他部分按剩料回收。</p><p>回收价按颜色、种水、裂纹、体量和取件路线计算，确认切石后不会重新抽奖。挂牌底价并不代表实际价值。</p>
+    <h3>回收价的游戏内参考。</h3><p>每格未扣裂纹的基础值为：105 + 种水×125 + 颜色×170；种水和颜色都达到2时再加180。细裂按89%计算，大裂按58%计算。整料还按体量乘以（0.72 + 重量kg÷12），最后再按取件路线计价并取整到50。大件成型会有溢价，失败改小件则会折价。这是本Demo的简化定价，不是真实玉石估价。</p>
+    <h3>没拍到，也还有事做。</h3><p>调查新位置、选择公开什么、影响对手判断、参与接盘，并回答鉴料题。系统调查记录可靠；口头发言可能夸大、保留或误导。每阶段可表达一次判断、公开一条记录，电脑会参考这些信息。</p>
+    <h3>流拍、资金不足和同价。</h3><p>初拍全员放弃就流拍，直接鉴料揭晓，无玩家承担买料和加工费。无人接盘或石主拒绝，就由原石主继续切石。没有贷款或提前淘汰，资金不足仍能调查、发言和答题。同价优先位每轮轮换：第1轮A→B→C→D，第2轮B→C→D→A，依此类推。</p><p>本试玩没有强制倒计时，可按自己的节奏完成。刷新页面会结束当前对局；输入相同种子可以重玩同一组原石。</p>
+  </div></dialog>
+  <dialog id="new-dialog" class="dialog" aria-labelledby="new-title"><div class="dialog-head"><h2 id="new-title">开始一场新对局</h2><button class="button small" type="button" data-act="close-new">返回当前对局</button></div><div class="dialog-body"><p>确认开局后，当前对局将被新的一局替换。保留相同种子可以重新挑战同一组原石。</p><label class="label" for="new-seed">对局种子</label><div class="seed-row"><input class="field" id="new-seed" maxlength="40" autocomplete="off"><button class="button" type="button" data-act="random-new">随机</button></div><div class="actions" style="margin-top:20px"><button class="button primary" type="button" data-act="start-new">开始六轮对局</button></div></div></dialog>
+  <noscript><p class="wrap" style="padding:35px">此游戏需要启用JavaScript。文件包含全部代码和图形，不依赖网络资源。</p></noscript>
+  <script>
+  (function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.JadeEngine = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const IDS = ['A', 'B', 'C', 'D'];
+  const FEATURES = ['color', 'quality', 'crack'];
+  const AREAS = ['左上', '上缘', '右上', '左侧', '中心', '右侧', '左下', '底部', '右下'];
+  const FEATURE_NAMES = { color: '颜色', quality: '种水', crack: '裂纹' };
+  const LEVELS = {
+    color: ['无明显色', '浅色', '明显带色', '浓色'],
+    quality: ['粗', '普通', '细腻', '通透'],
+    crack: ['未见裂', '细裂', '大裂']
+  };
+  const CUTS = {
+    large: { name: '保大件', short: '保住完整区域，争取一件大件', detail: '外圈8格没有大裂、平均种水达到1.5时，可成大件；否则改做小件，收益会下降。' },
+    split: { name: '分料避裂', short: '左右分开，完整的两侧做吊坠', detail: '左右两列分别取件，中央带按小件计价。两侧完整时收益更好。' },
+    color: { name: '追色小件', short: '围绕高色区域，取少量精品小件', detail: '优先使用最多4格颜色达到2的材料。适合好色集中、其他区域一般的料。' }
+  };
+  const WINDOWS = [
+    { cell: 1, name: '上缘追色', text: '检查上部色带与质地' },
+    { cell: 5, name: '右侧查裂', text: '检查右侧的完整性' },
+    { cell: 7, name: '底部探底', text: '检查下部是否延续好料' }
+  ];
+  const PROFILES = {
+    A: { id: 'A', name: '你', title: '自由判断', color: '#b3deb6' },
+    B: { id: 'B', name: '陆谨', title: '稳健派', color: '#acc9e9', risk: 0.42, bidFactor: 0.82, offerFactor: 0.90, budget: 0.66, bluff: 0.10, trust: 0.32, focus: 'crack', sellFactor: 0.86 },
+    C: { id: 'C', name: '阿烈', title: '敢赌派', color: '#e6bf82', risk: -0.08, bidFactor: 1.05, offerFactor: 1.06, budget: 0.86, bluff: 0.30, trust: 0.55, focus: 'color', sellFactor: 1.03 },
+    D: { id: 'D', name: '林巧', title: '交易派', color: '#d1b9e5', risk: 0.16, bidFactor: 0.88, offerFactor: 0.98, budget: 0.78, bluff: 0.47, trust: 0.25, focus: 'quality', sellFactor: 0.83 }
+  };
+  const QUESTIONS = [
+    { key: 'centralCrack', text: '中心横排（4、5、6区）是否至少有一处大裂？', help: '大裂等级为2。任意一格达到2，答案就是“是”。' },
+    { key: 'rich', text: '明显带色区域（颜色≥2）是否至少有4格？', help: '这道题看全料颜色分布，与最终切法无关。' },
+    { key: 'fine', text: '细腻区域（种水≥2）是否至少有5格？', help: '局部细腻不能代表整块料，需要结合多个位置判断。' },
+    { key: 'lowerColor', text: '底排（7、8、9区）是否至少有2格明显带色？', help: '底排中至少两格颜色达到2，答案为“是”。' }
+  ];
+  const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  const round50 = n => Math.max(0, Math.round(n / 50) * 50);
+  const copy = obj => JSON.parse(JSON.stringify(obj));
+  function hashSeed(value) {
+    let h = 2166136261;
+    for (const ch of String(value)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+  function makeRng(seed) {
+    let a = typeof seed === 'number' ? seed >>> 0 : hashSeed(seed);
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const pick = (rng, list) => list[Math.floor(rng() * list.length)];
+  const mean = list => list.reduce((a, b) => a + b, 0) / list.length;
+  function skinOf(cells) {
+    const edge = cells.filter((_, i) => i !== 4);
+    return {
+      color: clamp(Math.round(mean(edge.map(c => c.color))), 0, 3),
+      quality: clamp(Math.round(mean(edge.map(c => c.quality))), 0, 3),
+      crack: clamp(Math.round(mean(edge.map(c => c.crack))), 0, 2)
+    };
+  }
+  function generateStone(rng, options = {}) {
+    const family = pick(rng, ['even', 'vein', 'pocket', 'fractured', 'plain']);
+    const mass = options.mass || Math.round((2.5 + rng() * 5.0) * 10) / 10;
+    const baseQ = family === 'even' ? 2 : family === 'plain' ? 1 : 1 + Math.round(rng());
+    const baseC = family === 'even' ? Math.round(rng()) : family === 'plain' ? 0 : Math.round(rng());
+    const vein = Math.floor(rng() * 3);
+    const diagonal = rng() < 0.45;
+    const pocket = Math.floor(rng() * 9);
+    const path = { vertical: rng() < 0.5, index: Math.floor(rng() * 3) };
+    const major = rng() < (family === 'fractured' ? 0.92 : family === 'even' ? 0.15 : 0.42);
+    const cells = Array.from({ length: 9 }, (_, i) => {
+      const row = Math.floor(i / 3), col = i % 3;
+      const inVein = diagonal ? Math.abs(row - col) <= (vein === 1 ? 1 : 0) : col === vein;
+      let color = baseC;
+      if (family === 'vein' && inVein) color = 2 + Math.round(rng());
+      else if (family === 'pocket' && (i === pocket || Math.abs(i - pocket) === 1)) color = 2 + Math.round(rng());
+      else if (family === 'fractured') color = 1 + Math.round(rng() * 2);
+      else if (rng() < 0.22) color += 1;
+      let quality = baseQ + (rng() < 0.23 ? -1 : rng() < 0.28 ? 1 : 0);
+      if (family === 'pocket' && color >= 2) quality++;
+      const onPath = path.vertical ? col === path.index : row === path.index;
+      let crack = major && onPath ? 2 : rng() < (family === 'fractured' ? 0.45 : 0.18) ? 1 : 0;
+      if (!major && onPath && rng() < 0.30) crack = 1;
+      return { color: clamp(color, 0, 3), quality: clamp(quality, 0, 3), crack };
+    });
+    const skin = skinOf(cells);
+    const floor = options.floor || round50(650 + mass * 110 + rng() * 600);
+    return { cells, mass, skin, floor, family, path };
+  }
+  function cellValue(cell) {
+    const base = 105 + cell.quality * 125 + cell.color * 170 + (cell.quality >= 2 && cell.color >= 2 ? 180 : 0);
+    return base * (cell.crack === 2 ? 0.58 : cell.crack === 1 ? 0.89 : 1);
+  }
+  function evaluateCut(stone, plan) {
+    const cells = stone.cells;
+    const values = cells.map(cellValue);
+    const total = values.reduce((a, b) => a + b, 0);
+    const scale = 0.72 + stone.mass / 12;
+    let value, items, reason, good = false;
+    if (plan === 'large') {
+      const ring = cells.filter((_, i) => i !== 4);
+      good = ring.every(c => c.crack < 2) && mean(ring.map(c => c.quality)) >= 1.5;
+      value = good ? total * 1.30 + 500 : total * 0.63;
+      items = good ? '完整大件 + 镯芯与边料' : '改取小吊坠 + 剩料';
+      reason = good ? '外圈完整且种水达到大件要求，保住了连续材料。' : ring.some(c => c.crack === 2) ? '外圈大裂破坏完整区域，原定大件只能改做小件。' : '外圈平均种水未达到大件要求，成品只能降级取件。';
+    } else if (plan === 'split') {
+      const groups = [[0, 3, 6], [2, 5, 8]];
+      const intact = groups.filter(g => g.every(i => cells[i].crack < 2)).length;
+      value = groups.reduce((sum, group) => sum + group.reduce((a, i) => a + values[i], 0) * (group.every(i => cells[i].crack < 2) ? 1.03 : 0.76), 0);
+      value += [1, 4, 7].reduce((sum, i) => sum + values[i], 0) * 0.44 + intact * 180;
+      good = intact === 2;
+      items = intact === 2 ? '两侧完整吊坠 + 中央小件' : intact === 1 ? '一侧完整吊坠 + 小件' : '多件小饰品 + 剩料';
+      reason = `左右两列中有${intact}侧未被大裂破坏；中央带按小件利用。`;
+    } else if (plan === 'color') {
+      const rich = cells.map((c, i) => ({ c, i, v: values[i] })).filter(x => x.c.color >= 2).sort((a, b) => b.v - a.v).slice(0, 4);
+      const richSet = new Set(rich.map(x => x.i));
+      value = rich.reduce((sum, x) => sum + x.v * 1.30, 0) + values.reduce((sum, v, i) => sum + (richSet.has(i) ? 0 : v * 0.22), 0);
+      good = rich.length >= 3;
+      items = rich.length ? `${rich.length}组带色小件 + 剩料` : '普通小件 + 剩料';
+      reason = rich.length ? `找到${rich.length}格可优先利用的高色材料，集中取件，其余按剩料回收。` : '缺少颜色达到2的区域，追色路线没有获得明显溢价。';
+    } else throw new Error('未知切法。');
+    return { plan, value: Math.max(250, round50(value * scale)), items, reason, good };
+  }
+  function judgeQuestion(stone, key) {
+    if (key === 'centralCrack') return [3, 4, 5].some(i => stone.cells[i].crack === 2);
+    if (key === 'rich') return stone.cells.filter(c => c.color >= 2).length >= 4;
+    if (key === 'fine') return stone.cells.filter(c => c.quality >= 2).length >= 5;
+    if (key === 'lowerColor') return [6, 7, 8].filter(i => stone.cells[i].color >= 2).length >= 2;
+    throw new Error('未知鉴料题。');
+  }
+  function rankPlayers(players) {
+    const ranked = players.map(p => ({ id: p.id, cash: p.cash, correct: p.correct })).sort((a, b) => b.cash - a.cash || b.correct - a.correct || IDS.indexOf(a.id) - IDS.indexOf(b.id));
+    ranked.forEach((p, i) => { p.rank = i && p.cash === ranked[i - 1].cash && p.correct === ranked[i - 1].correct ? ranked[i - 1].rank : i + 1; });
+    return ranked;
+  }
+  function knownFrom(records) {
+    const known = Array.from({ length: 9 }, () => ({}));
+    for (const record of records) known[record.cell][record.feature] = record.value;
+    return known;
+  }
+  function estimate(view, rng, count = 112) {
+    // Candidates are generated independently. The AI never receives the actual stone.
+    const samples = [];
+    let sumW = 0;
+    const facts = [];
+    view.known.forEach((cell, i) => FEATURES.forEach(feature => {
+      if (Number.isInteger(cell[feature])) facts.push({ cell: i, feature, value: cell[feature] });
+    }));
+    for (let i = 0; i < count; i++) {
+      const candidate = generateStone(rng, { mass: view.public.mass, floor: view.public.floor });
+      let distance = Math.abs(candidate.skin.color - view.public.skin.color) * 0.8 + Math.abs(candidate.skin.quality - view.public.skin.quality) * 0.8 + Math.abs(candidate.skin.crack - view.public.skin.crack) * 0.9;
+      for (const fact of facts) { distance += Math.abs(candidate.cells[fact.cell][fact.feature] - fact.value) * 0.55; candidate.cells[fact.cell][fact.feature] = fact.value; }
+      const w = Math.exp(-Math.min(15, distance));
+      samples.push({ stone: candidate, w }); sumW += w;
+    }
+    const results = {};
+    for (const plan of Object.keys(CUTS)) {
+      let value = 0, square = 0;
+      for (const sample of samples) { const v = evaluateCut(sample.stone, plan).value; value += sample.w * v; square += sample.w * v * v; }
+      const avg = value / sumW;
+      results[plan] = { mean: avg, sd: Math.sqrt(Math.max(0, square / sumW - avg * avg)) };
+    }
+    const cells = Array.from({ length: 9 }, (_, cell) => {
+      const values = {};
+      for (const feature of FEATURES) {
+        let avg = 0, sq = 0;
+        for (const sample of samples) { const v = sample.stone.cells[cell][feature]; avg += v * sample.w; sq += v * v * sample.w; }
+        avg /= sumW;
+        values[feature] = { mean: avg, variance: Math.max(0, sq / sumW - avg * avg) };
+      }
+      return values;
+    });
+    const probability = samples.reduce((sum, sample) => sum + (judgeQuestion(sample.stone, view.question.key) ? sample.w : 0), 0) / sumW;
+    return { plans: results, cells, probability };
+  }
+  function sentiment(view, profile) {
+    const others = view.claims.filter(c => c.author !== profile.id);
+    return clamp(others.reduce((sum, c) => sum + c.lean * (c.theme === 'crack' ? -1 : 1), 0) * 0.035 * profile.trust, -0.08, 0.08);
+  }
+  function bestEstimate(belief, profile) {
+    return Object.entries(belief.plans).map(([plan, p]) => ({ plan, utility: p.mean - profile.risk * p.sd, mean: p.mean, sd: p.sd })).sort((a, b) => b.utility - a.utility)[0];
+  }
+  const ai = {
+    inspect(view, profile, rng) {
+      const belief = estimate(view, rng, 72);
+      const candidates = [];
+      for (let cell = 0; cell < 9; cell++) for (const feature of FEATURES) {
+        if (Number.isInteger(view.known[cell][feature])) continue;
+        let score = belief.cells[cell][feature].variance + rng() * 0.18;
+        if (feature === profile.focus) score += 0.28;
+        if (view.question.key === 'centralCrack' && feature === 'crack' && [3, 4, 5].includes(cell)) score += 0.28;
+        if (view.question.key === 'lowerColor' && feature === 'color' && cell >= 6) score += 0.25;
+        candidates.push({ cell, feature, score });
+      }
+      candidates.sort((a, b) => b.score - a.score);
+      return candidates[0] || null;
+    },
+    bid(view, profile, rng, kind) {
+      const belief = estimate(view, rng);
+      const best = bestEstimate(belief, profile);
+      const reserve = kind === 'first' ? 500 : 300;
+      const minimum = kind === 'first' ? view.public.floor : 50;
+      const self = view.players.find(p => p.id === profile.id);
+      const cap = Math.max(0, Math.min(self.cash - reserve, self.cash * profile.budget));
+      const factor = kind === 'first' ? profile.bidFactor : profile.offerFactor;
+      const spread = profile.id === 'C' ? 0.38 : profile.id === 'D' ? 0.22 : 0.14;
+      const jitter = 1 - spread / 2 + rng() * spread;
+      const target = round50((best.utility - reserve) * factor * jitter * (1 + sentiment(view, profile)));
+      return cap >= minimum && target >= minimum ? Math.min(Math.floor(cap / 50) * 50, target) : 0;
+    },
+    window(view, profile, rng) {
+      const belief = estimate(view, rng, 88);
+      const ranked = WINDOWS.map(window => {
+        const c = belief.cells[window.cell];
+        const information = c.color.variance + c.quality.variance + c.crack.variance;
+        const appeal = c.color.mean + c.quality.mean * 0.65 - c.crack.mean * 0.5;
+        const score = profile.id === 'D' ? appeal + information * 0.25 : profile.id === 'B' ? information + c.crack.variance * 0.7 : appeal * 0.65 + information * 0.6;
+        return { cell: window.cell, score: score + rng() * 0.12 };
+      });
+      return ranked.sort((a, b) => b.score - a.score)[0].cell;
+    },
+    accept(view, profile, rng, offer) {
+      if (!offer) return false;
+      const best = bestEstimate(estimate(view, rng), profile);
+      let threshold = (best.utility - 300) * profile.sellFactor;
+      if (profile.id === 'D' && offer.price >= (view.auction.price + 200) * 1.14) threshold *= 0.90;
+      return offer.price >= threshold;
+    },
+    quiz(view, profile, rng) { return estimate(view, rng).probability >= 0.5; },
+    cut(view, profile, rng) { return bestEstimate(estimate(view, rng), profile).plan; },
+    message(view, profile, rng) {
+      const records = view.ownClues;
+      const last = records[records.length - 1];
+      let theme = last ? last.feature : profile.focus;
+      let lean = last ? (last.value >= (theme === 'crack' ? 1 : 2) ? 1 : -1) : 1;
+      const bluff = rng() < profile.bluff;
+      if (bluff) lean *= -1;
+      if (view.owner === profile.id && profile.id === 'D') { theme = 'color'; lean = 1; }
+      const positive = {
+        color: ['我觉得色带还有延伸，可以再看。', '带色位置值得争，我愿意留点空间。'],
+        quality: ['我偏看好种水，完整取件可能有价值。', '局部质地不错，别只盯着颜色。'],
+        crack: ['我担心裂会往里走，价格得留余地。', '裂的风险还在，我不会按最好的情况估。']
+      };
+      const negative = {
+        color: ['我对色带厚度保留判断。', '表面见色，里面能用多少还难说。'],
+        quality: ['种水可能有变化，别按全料一致去算。', '我觉得质地一般，得靠取件。'],
+        crack: ['这条裂也许能避开，仍有取件空间。', '我认为完整区域还有机会。']
+      };
+      return { author: profile.id, theme, lean, text: pick(rng, (lean > 0 ? positive : negative)[theme]), verified: false };
+    }
+  };
+
+  class Game {
+    constructor(seed) {
+      this.seed = String(seed || 'JADE-6').slice(0, 64);
+      this.players = IDS.map(id => ({ id, cash: 10000, correct: 0 }));
+      this.round = 0;
+      this.phase = 'lobby';
+      this.history = [];
+      this.r = null;
+    }
+    _rng(purpose) { return makeRng(hashSeed(`${this.seed}/round:${this.round}/${purpose}`)); }
+    _player(id) { return this.players.find(p => p.id === id); }
+    _expect(phase) { if (this.phase !== phase) throw new Error('当前阶段不能进行这项操作。'); }
+    _log(text, author = 'SYS', type = 'system') { this.r.log.push({ text, author, type }); }
+    _money(id, amount, label) {
+      const player = this._player(id);
+      if (!Number.isSafeInteger(amount) || player.cash + amount < 0) throw new Error('资金不足，无法完成这项操作。');
+      player.cash += amount;
+      this.r.ledger.push({ player: id, amount, label });
+    }
+    start() { this._expect('lobby'); this._beginRound(); return this.view(); }
+    _beginRound() {
+      this.round++;
+      const stone = generateStone(this._rng('stone'));
+      const artRng = this._rng('art');
+      this.r = {
+        stone,
+        public: { mass: stone.mass, skin: copy(stone.skin), floor: stone.floor, visualSeed: Math.floor(artRng() * 99), code: `J-${String(this.round).padStart(2, '0')}${String(Math.floor(artRng() * 900 + 100))}` },
+        question: copy(QUESTIONS[(this.round - 1) % QUESTIONS.length]),
+        opening: Object.fromEntries(this.players.map(p => [p.id, p.cash])),
+        private: Object.fromEntries(IDS.map(id => [id, []])),
+        used: Object.fromEntries(IDS.map(id => [id, { look: false, recheck: false }])),
+        shared: [], claims: [], log: [], ledger: [], firstBids: {}, offers: {},
+        auction: null, owner: null, window: null, cpuWindow: null,
+        highOffer: null, offersRevealed: false, dealDone: false, transfer: null,
+        humanSpeech: {}, humanShares: {}, answers: {}, aiCut: null,
+        settled: false, resolution: null
+      };
+      this.phase = 'look';
+      this._log(`第${this.round}轮开始，挂牌底价${stone.floor}。四人各有一次私人细查。`);
+      this._prepareBotsInspection('look');
+    }
+    _viewFor(id) {
+      const r = this.r;
+      const publicRecords = r.shared.map(s => ({ ...s }));
+      if (r.window !== null) for (const feature of FEATURES) publicRecords.push({ author: 'SYS', cell: r.window, feature, value: r.stone.cells[r.window][feature], source: 'window' });
+      const ownClues = copy(r.private[id]);
+      return {
+        id, round: this.round, phase: this.phase,
+        public: copy(r.public), players: this.players.map(p => ({ ...p })),
+        question: copy(r.question), owner: r.owner,
+        auction: r.auction ? { ...r.auction } : null,
+        window: r.window,
+        ownClues, publicClues: publicRecords,
+        known: knownFrom([...publicRecords, ...ownClues]),
+        claims: copy(r.claims)
+      };
+    }
+    view() {
+      if (this.phase === 'lobby') return { phase: 'lobby', seed: this.seed, players: copy(this.players), history: [] };
+      const v = this._viewFor('A');
+      return {
+        ...v, seed: this.seed,
+        used: { ...this.r.used.A },
+        speechUsed: !!this.r.humanSpeech[this.phase],
+        shareUsed: !!this.r.humanShares[this.phase],
+        log: copy(this.r.log),
+        announcedWindow: this.phase === 'window' ? this.r.cpuWindow : null,
+        announcedCut: this.phase === 'cut' ? this.r.aiCut : null,
+        highOffer: this.r.offersRevealed && this.r.highOffer ? { ...this.r.highOffer } : null,
+        offersRevealed: this.r.offersRevealed,
+        dealDone: this.r.dealDone,
+        transfer: this.r.transfer ? { ...this.r.transfer } : null,
+        resolution: this.r.settled ? copy(this.r.resolution) : null,
+        history: copy(this.history),
+        rankings: rankPlayers(this.players)
+      };
+    }
+    _observe(id, query, stage) {
+      if (!query || !Number.isInteger(query.cell) || query.cell < 0 || query.cell > 8 || !FEATURES.includes(query.feature)) throw new Error('请选择有效区域和调查项目。');
+      if (this.r.used[id][stage]) throw new Error('本阶段的私人细查已使用。');
+      if (Number.isInteger(this._viewFor(id).known[query.cell][query.feature])) throw new Error('这项局部特征已经知道，请换一个位置或项目。');
+      const record = { id: `${this.round}-${id}-${this.r.private[id].length}`, author: id, cell: query.cell, feature: query.feature, value: this.r.stone.cells[query.cell][query.feature], stage };
+      this.r.private[id].push(record);
+      this.r.used[id][stage] = true;
+      return record;
+    }
+    _share(id, record) {
+      if (!record || !this.r.private[id].some(c => c.id === record.id)) throw new Error('只能公开自己实际调查过的记录。');
+      if (this.r.shared.some(c => c.cell === record.cell && c.feature === record.feature)) return false;
+      this.r.shared.push({ ...record });
+      this._log(`${AREAS[record.cell]}${FEATURE_NAMES[record.feature]}：${record.value} · ${LEVELS[record.feature][record.value]}。`, id, 'evidence');
+      return true;
+    }
+    _prepareBotsInspection(stage) {
+      for (const id of ['B', 'C', 'D']) {
+        const query = ai.inspect(this._viewFor(id), PROFILES[id], this._rng(`${id}/${stage}/inspect`));
+        if (query) this._observe(id, query, stage);
+      }
+      for (const id of ['B', 'C', 'D']) {
+        const rng = this._rng(`${id}/${stage}/talk`);
+        const chance = stage === 'look' ? 0.16 : 0.34;
+        if (rng() < chance) {
+          const privateRecords = this.r.private[id];
+          this._share(id, privateRecords[privateRecords.length - 1]);
+        }
+        const claim = ai.message(this._viewFor(id), PROFILES[id], rng);
+        this.r.claims.push(claim);
+        this._log(claim.text, id, 'speech');
+      }
+    }
+    inspect(cell, feature) {
+      if (!['look', 'recheck'].includes(this.phase)) throw new Error('只有看料和复查阶段可进行私人细查。');
+      this._observe('A', { cell, feature }, this.phase);
+      return this.view();
+    }
+    share(recordId) {
+      if (!['look', 'recheck'].includes(this.phase)) throw new Error('本阶段不能公开调查记录。');
+      if (this.r.humanShares[this.phase]) throw new Error('本阶段已经公开过一条记录。');
+      const record = this.r.private.A.find(c => c.id === recordId);
+      if (this._share('A', record)) this.r.humanShares[this.phase] = true;
+      return this.view();
+    }
+    speak(kind) {
+      if (!['look', 'recheck'].includes(this.phase)) throw new Error('现在不能发言。');
+      if (this.r.humanSpeech[this.phase]) throw new Error('本阶段已经表达过一次判断。');
+      const options = {
+        bullish: { theme: 'color', lean: 1, text: '我看好这块料的颜色，里面可能还有空间。' },
+        cautious: { theme: 'crack', lean: 1, text: '我担心内部裂纹，价格应该留足余地。' },
+        texture: { theme: 'quality', lean: 1, text: '我更关注种水和完整性，这块值得再看。' }
+      };
+      if (!options[kind]) throw new Error('请选择一种发言。');
+      const claim = { author: 'A', ...options[kind], verified: false };
+      this.r.claims.push(claim);
+      this.r.humanSpeech[this.phase] = true;
+      this._log(claim.text, 'A', 'speech');
+      return this.view();
+    }
+    goBid() {
+      this._expect('look');
+      for (const id of ['B', 'C', 'D']) this.r.firstBids[id] = ai.bid(this._viewFor(id), PROFILES[id], this._rng(`${id}/first-bid`), 'first');
+      this.phase = 'bid';
+      this._log('三位电脑的暗标已封存。你的报价不会改变它们已经提交的金额。');
+      return this.view();
+    }
+    _validatePrice(price, reserve, minimum) {
+      if (!Number.isSafeInteger(price) || price < 0) throw new Error('报价须为非负整数，0表示放弃。');
+      if (price > 0 && price < minimum) throw new Error(`本次报价至少${minimum}，也可填0放弃。`);
+      if (price > 0 && price > this._player('A').cash - reserve) throw new Error(`需预留${reserve}游戏币，当前最多可报${Math.max(0, this._player('A').cash - reserve)}。`);
+    }
+    _winner(bids, excluded, minimum, reserve) {
+      const priority = (this.round - 1) % 4;
+      const order = id => (IDS.indexOf(id) - priority + 4) % 4;
+      return IDS.filter(id => id !== excluded).map(id => ({ player: id, price: bids[id] || 0 })).filter(b => Number.isSafeInteger(b.price) && b.price >= minimum && b.price <= this._player(b.player).cash - reserve).sort((a, b) => b.price - a.price || order(a.player) - order(b.player))[0] || null;
+    }
+    bid(price) {
+      this._expect('bid'); this._validatePrice(price, 500, this.r.public.floor);
+      this.r.firstBids.A = price;
+      const winner = this._winner(this.r.firstBids, null, this.r.public.floor, 500);
+      if (!winner) { this._log('四人均未提交有效买入价，原石流拍，直接进入鉴料。'); this._enterQuiz(); return this.view(); }
+      this.r.auction = { ...winner }; this.r.owner = winner.player;
+      this._money(winner.player, -winner.price, '初拍买入');
+      this._log(`${PROFILES[winner.player].name}以${winner.price}拍下原石。`, winner.player, 'trade');
+      this.phase = 'window';
+      if (winner.player !== 'A') this.r.cpuWindow = ai.window(this._viewFor(winner.player), PROFILES[winner.player], this._rng(`${winner.player}/window`));
+      return this.view();
+    }
+    openWindow(cell) {
+      this._expect('window');
+      if (this.r.owner === 'A') {
+        if (!WINDOWS.some(w => w.cell === cell)) throw new Error('请选择一处候选公窗。');
+      } else {
+        if (cell !== undefined) throw new Error('电脑持有原石时，由电脑决定开窗位置。');
+        cell = this.r.cpuWindow;
+      }
+      this._money(this.r.owner, -200, '开公窗');
+      this.r.window = cell;
+      const c = this.r.stone.cells[cell];
+      this._log(`${PROFILES[this.r.owner].name}在${AREAS[cell]}开公窗：色${c.color}、种${c.quality}、裂${c.crack}。`, this.r.owner, 'window');
+      this.phase = 'recheck';
+      this._prepareBotsInspection('recheck');
+      return this.view();
+    }
+    goOffer() {
+      this._expect('recheck');
+      for (const id of ['B', 'C', 'D']) if (id !== this.r.owner) this.r.offers[id] = ai.bid(this._viewFor(id), PROFILES[id], this._rng(`${id}/offer-bid`), 'offer');
+      this.phase = 'offer';
+      this._log('接盘报价已开始。参与报价的电脑已经封标，报价被接受就必须付款。');
+      return this.view();
+    }
+    offer(price) {
+      this._expect('offer');
+      if (this.r.owner === 'A') throw new Error('你已持有原石，无需向自己报价。');
+      this._validatePrice(price, 300, 1);
+      this.r.offers.A = price;
+      this._resolveOffers();
+      return this.view();
+    }
+    revealOffers() {
+      this._expect('offer');
+      if (this.r.owner !== 'A') throw new Error('请先提交或放弃你的接盘报价。');
+      this._resolveOffers(); return this.view();
+    }
+    _resolveOffers() {
+      this.r.highOffer = this._winner(this.r.offers, this.r.owner, 1, 300);
+      this.r.offersRevealed = true;
+      this.phase = 'deal';
+      if (!this.r.highOffer) { this.r.dealDone = true; this._log('无人接盘，原石主继续持有。'); return; }
+      const offer = this.r.highOffer;
+      this._log(`最高接盘报价：${PROFILES[offer.player].name}，${offer.price}。`, offer.player, 'trade');
+      if (this.r.owner !== 'A') {
+        const id = this.r.owner;
+        const accept = ai.accept(this._viewFor(id), PROFILES[id], this._rng(`${id}/accept`), offer);
+        this._completeDeal(accept);
+      }
+    }
+    decideDeal(accept) {
+      this._expect('deal');
+      if (this.r.auction.player !== 'A' || this.r.dealDone) throw new Error('现在没有需要你决定的转手交易。');
+      if (typeof accept !== 'boolean') throw new Error('请选择接受或保留。');
+      this._completeDeal(accept); return this.view();
+    }
+    _completeDeal(accept) {
+      const offer = this.r.highOffer;
+      const seller = this.r.owner;
+      if (accept && offer) {
+        if (this._player(offer.player).cash < offer.price + 300) throw new Error('接盘者没有留足加工费用。');
+        this._money(offer.player, -offer.price, '接盘买入');
+        this._money(seller, offer.price, '转手收入');
+        this.r.transfer = { seller, ...offer };
+        this.r.owner = offer.player;
+        this._log(`${PROFILES[seller].name}接受报价，${PROFILES[offer.player].name}付款接手，随后负责切石。`, seller, 'trade');
+      } else this._log(`${PROFILES[seller].name}拒绝转手，决定继续持有。`, seller, 'trade');
+      this.r.dealDone = true;
+    }
+    goQuiz() { this._expect('deal'); if (!this.r.dealDone) throw new Error('请先决定是否接受最高报价。'); this._enterQuiz(); return this.view(); }
+    _enterQuiz() {
+      this.phase = 'quiz';
+      for (const id of ['B', 'C', 'D']) this.r.answers[id] = ai.quiz(this._viewFor(id), PROFILES[id], this._rng(`${id}/quiz`));
+      this._log('三位电脑已锁定鉴料答案。你也可以回答，答对+200；放弃则无奖励。');
+    }
+    answer(value) {
+      this._expect('quiz');
+      if (value !== null && typeof value !== 'boolean') throw new Error('请选择是、否，或放弃回答。');
+      this.r.answers.A = value;
+      this.phase = 'cut';
+      if (this.r.owner && this.r.owner !== 'A') this.r.aiCut = ai.cut(this._viewFor(this.r.owner), PROFILES[this.r.owner], this._rng(`${this.r.owner}/cut`));
+      return this.view();
+    }
+    cut(plan) {
+      this._expect('cut');
+      if (this.r.settled) throw new Error('本轮已经结算。');
+      if (this.r.owner === 'A') {
+        if (!CUTS[plan]) throw new Error('请选择一种切法。');
+      } else {
+        if (plan !== undefined) throw new Error('只能由最后持有人决定切法。');
+        plan = this.r.aiCut || 'split';
+      }
+      const outcome = evaluateCut(this.r.stone, plan);
+      if (this.r.owner) { this._money(this.r.owner, -300, '最终加工'); this._money(this.r.owner, outcome.value, '成品与剩料回收'); }
+      const truth = judgeQuestion(this.r.stone, this.r.question.key);
+      for (const id of IDS) if (typeof this.r.answers[id] === 'boolean' && this.r.answers[id] === truth) {
+        this._player(id).correct++; this._money(id, 200, '鉴料奖励');
+      }
+      const allCuts = Object.fromEntries(Object.keys(CUTS).map(key => [key, evaluateCut(this.r.stone, key)]));
+      const closing = Object.fromEntries(this.players.map(p => [p.id, p.cash]));
+      this.r.resolution = {
+        round: this.round, code: this.r.public.code, opening: { ...this.r.opening }, closing,
+        auction: this.r.auction ? { ...this.r.auction } : null, window: this.r.window,
+        transfer: this.r.transfer ? { ...this.r.transfer } : null, owner: this.r.owner,
+        outcome, allCuts, truth, answers: { ...this.r.answers },
+        ledger: copy(this.r.ledger), cells: copy(this.r.stone.cells), path: { ...this.r.stone.path },
+        question: copy(this.r.question), audit: copy(this.r.private), claims: copy(this.r.claims)
+      };
+      this.r.settled = true;
+      this._log(this.r.owner ? `${PROFILES[this.r.owner].name}选择${CUTS[plan].name}，成品回收${outcome.value}。` : '货主解料完成，流拍原石不计入任何玩家资产。', this.r.owner || 'SYS', 'result');
+      this._log(`鉴料事实：${truth ? '是' : '否'}。正确回答者各获得200。`, 'SYS', 'result');
+      this.history.push(copy(this.r.resolution));
+      this.phase = 'result';
+      return this.view();
+    }
+    nextRound() {
+      this._expect('result');
+      if (this.round === 6) { this.phase = 'end'; return this.view(); }
+      this._beginRound(); return this.view();
+    }
+  }
+  return { IDS, FEATURES, AREAS, FEATURE_NAMES, LEVELS, CUTS, WINDOWS, PROFILES, QUESTIONS, hashSeed, makeRng, generateStone, evaluateCut, judgeQuestion, rankPlayers, estimate, ai, Game };
+});
+
+  </script>
+  <script>
+  (() => {
+  'use strict';
+  const E = window.JadeEngine;
+  const $ = id => document.getElementById(id);
+  const fmt = n => Math.round(n).toLocaleString('zh-CN');
+  const signed = n => n === 0 ? '0' : (n > 0 ? '+' : '−') + fmt(Math.abs(n));
+  const esc = str => String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const P = E.PROFILES;
+  const STAGES = ['看料','原石暗拍','开公窗','复查交锋','接盘报价','鉴料切石','出货结算'];
+  const STAGE_INDEX = {look:0,bid:1,window:2,recheck:3,offer:4,deal:4,quiz:5,cut:5,result:6};
+  const avatar = id => `<span class="avatar" style="--player-color:${P[id].color}" aria-hidden="true">${id}</span>`;
+  const name = id => id === 'A' ? '你' : P[id]?.name || '货主';
+  const profileName = id => id === 'A' ? 'A · 你' : `${id} · ${name(id)}`;
+  const randomSeed = () => `JADE-${Math.random().toString(36).slice(2,8).toUpperCase()}`;
+  let initialSeed = randomSeed();
+  let game = null;
+  let busy = false;
+  let toastTimer;
+  const ui = {cell:4,feature:'color',window:1,cut:'large',answer:undefined,bid:'',historyRound:6};
+
+  function toast(text, error=false) {
+    clearTimeout(toastTimer);
+    $('toast').textContent=text;
+    $('toast').classList.toggle('error-toast',error);
+    $('toast').hidden=false;
+    $('live').textContent=text;
+    toastTimer=setTimeout(()=>$('toast').hidden=true,3600);
+  }
+  function miniStone() {
+    return `<svg class="lobby-stone" viewBox="0 0 480 285" role="img" aria-label="一块待观察的原石，局部带色，内部未知"><defs><linearGradient id="lobby-rock" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#969275"/><stop offset=".5" stop-color="#556348"/><stop offset="1" stop-color="#263e2b"/></linearGradient><radialGradient id="lobby-jade"><stop stop-color="#dbeabd"/><stop offset=".45" stop-color="#8dc779"/><stop offset="1" stop-color="#396d3c"/></radialGradient><filter id="lobby-texture"><feTurbulence baseFrequency=".07" numOctaves="3" seed="17" result="n"/><feDiffuseLighting in="n" lighting-color="#b6b294" surfaceScale="1.6" diffuseConstant=".5" result="lit"><feDistantLight azimuth="225" elevation="50"/></feDiffuseLighting><feComposite in="lit" in2="SourceGraphic" operator="in"/><feBlend in="SourceGraphic" mode="soft-light"/></filter></defs><ellipse cx="244" cy="253" rx="126" ry="11" fill="#0004"/><path d="M145 52 221 29 300 58 355 107 371 175 321 231 238 247 163 222 121 158 121 99Z" fill="url(#lobby-rock)" stroke="#a6b09299" filter="url(#lobby-texture)"/><path d="m295 66-13 40 9 25-17 31 5 37-16 25" stroke="#1b2b1d" stroke-width="3" fill="none"/><path d="M202 109c19-16 47-13 61 4s9 35-7 43-43 6-55-5-13-29 1-42Z" fill="url(#lobby-jade)" stroke="#d4d7b1" stroke-width="3"/><path d="M229 131 292 42 412 42M285 156 398 172 432 172" stroke="#97ac8877" fill="none" stroke-width=".7"/><g fill="#c9d5bd" font-size="10" font-family="system-ui,sans-serif"><text x="327" y="33">色带会延伸吗？</text><text x="356" y="189">裂会深入吗？</text></g></svg>`;
+  }
+  function lobby() {
+    $('app').dataset.phase='lobby';
+    $('app').innerHTML=`<section class="lobby"><div><div class="eyebrow">One player. Three rivals. Six rounds.</div><h1>这一刀，<br><em>由你决定。</em></h1><p class="lead">你是A，与三位电脑同桌看料。<br>凭线索估价，用发言试探；开窗后，还能争取接盘。<br>六轮结束，看看谁把判断变成了真收益。</p><div class="small-rules"><div><b>10,000</b><span>每人初始游戏币</span></div><div><b>6 轮</b><span>资金连续累计</span></div><div><b>2 次</b><span>每轮买入机会</span></div><div><b>1 次</b><span>最终切石揭晓</span></div></div><label class="label" for="seed-input">对局种子 <small class="muted">相同种子可重玩同一组原石</small></label><div class="seed-row"><input class="field" id="seed-input" value="${esc(initialSeed)}" maxlength="40" autocomplete="off" aria-label="对局种子"><button class="button" type="button" data-act="random-lobby">随机</button></div><div class="start-actions actions"><button class="button primary" type="button" data-act="start">开始六轮对局 <span aria-hidden="true">↗</span></button><button class="button ghost" type="button" data-act="help">先看规则</button></div><p class="subtle">无需安装或联网。没有强制倒计时，你可以慢慢观察与出价。</p></div><div class="lobby-board"><div class="row"><span class="eyebrow">今晚的同桌对手</span><span class="pill green">独立估价 · 私密信息</span></div>${miniStone()}<div class="opponent-list"><div class="opponent" style="--player-color:${P.B.color}">${avatar('B')}<div class="text"><h3>陆谨</h3><p>重视裂纹与本金，愿意为确定收益让步。</p></div><span class="pill">稳健派</span></div><div class="opponent" style="--player-color:${P.C.color}">${avatar('C')}<div class="text"><h3>阿烈</h3><p>看中潜在好料，出价敢，也可能承担高估。</p></div><span class="pill amber">敢赌派</span></div><div class="opponent" style="--player-color:${P.D.color}">${avatar('D')}<div class="text"><h3>林巧</h3><p>在意转手空间，发言常带着交易目的。</p></div><span class="pill">交易派</span></div></div><p class="lobby-foot">系统调查记录可靠，口头发言需要判断。电脑和你一样，只能使用自己得到的线索与公开信息。</p></div></section>`;
+  }
+  function start(seed) {
+    clearTimeout(toastTimer);$('toast').hidden=true;
+    initialSeed=String(seed||randomSeed()).trim().slice(0,40)||randomSeed();
+    game=new E.Game(initialSeed);
+    game.start();
+    ui.cell=4;ui.feature='color';ui.window=1;ui.cut='large';ui.answer=undefined;ui.bid='';
+    if($('new-dialog').open)$('new-dialog').close();
+    render();
+    $('live').textContent='对局开始。你控制A，第1轮看料。';
+    $('app').scrollIntoView({block:'start',behavior:'smooth'});
+  }
+  function syncPhase(oldPhase,v) {
+    if(v.phase===oldPhase)return;
+    if(v.phase==='bid')ui.bid=v.players.find(p=>p.id==='A').cash>=v.public.floor+500?String(v.public.floor):'0';
+    if(v.phase==='offer')ui.bid='0';
+    if(v.phase==='quiz')ui.answer=undefined;
+    if(v.phase==='cut')ui.cut=v.announcedCut||'large';
+    if(v.phase==='window')ui.window=v.announcedWindow??1;
+    if(['look','recheck'].includes(v.phase)){
+      const unknown=[];
+      for(let cell=0;cell<9;cell++)for(const feature of E.FEATURES)if(!Number.isInteger(v.known[cell][feature]))unknown.push({cell,feature});
+      const choice=unknown.find(q=>q.cell===ui.cell&&q.feature===ui.feature)||unknown.find(q=>q.cell===4)||unknown[0];
+      if(choice){ui.cell=choice.cell;ui.feature=choice.feature;}
+    }
+  }
+  function act(fn,success) {
+    if(busy)return;
+    const old=game?.phase;
+    try{fn();const v=game.view();syncPhase(old,v);render();if(success)toast(success);else if(old!==v.phase)$('live').textContent=`第${v.round}轮，${STAGES[STAGE_INDEX[v.phase]]||'对局结束'}。`;}
+    catch(error){toast(error.message,true);}
+  }
+  function scoreCards(v) {
+    return `<div class="scoreboard" aria-label="四名玩家的公开资金">${v.players.map(player=>{
+      let note=`${P[player.id].title} · 鉴料${player.correct}次正确`;
+      if(v.owner===player.id)note='当前持有人 · 最终承担切石结果';
+      if(v.transfer?.seller===player.id)note='已转手 · 买卖结果已锁定';
+      return `<div class="score ${player.id==='A'?'you':''} ${v.owner===player.id?'owner':''}" style="--player-color:${P[player.id].color}">${avatar(player.id)}<div><div class="score-name"><span>${profileName(player.id)}</span>${v.owner===player.id?'<span class="pill green">持有</span>':player.id==='A'?'<span class="pill">你控制</span>':''}</div><div class="cash number">${fmt(player.cash)}</div><div class="note">${note}</div></div></div>`;
+    }).join('')}</div>`;
+  }
+  function phaseTrack(v) {
+    const index=STAGE_INDEX[v.phase];
+    return `<div class="phase-track" aria-label="本轮进度">${STAGES.map((s,i)=>`<div class="phase ${i===index?'active':i<index?'done':''}" ${i===index?'aria-current="step"':''}><b>${String(i+1).padStart(2,'0')}</b>${s}</div>`).join('')}</div>`;
+  }
+  function notebook(v) {
+    const canShare=['look','recheck'].includes(v.phase)&&!v.shareUsed;
+    const clues=v.ownClues.map(c=>{
+      const isPublic=v.publicClues.some(p=>p.cell===c.cell&&p.feature===c.feature);
+      return `<div class="clue"><div class="clue-head"><span>${c.stage==='look'?'看料细查':'开窗后复查'} · ${c.cell+1} ${E.AREAS[c.cell]}</span><span>${isPublic?'已公开':'仅你可见'}</span></div><div class="reading">${E.FEATURE_NAMES[c.feature]} <strong>${c.value}</strong>${E.LEVELS[c.feature][c.value]}</div>${canShare&&!isPublic?`<button type="button" class="button small" data-act="share" data-record="${esc(c.id)}">公开这条真实记录</button>`:''}</div>`;
+    }).join('');
+    const canSpeak=['look','recheck'].includes(v.phase)&&!v.speechUsed;
+    return `<aside class="panel notebook"><div class="panel-head row"><h3>你的手记</h3><span class="pill blue">私密</span></div><div class="notebook-body"><div class="question-card"><div class="eyebrow">全员鉴料题 · 答对 +200</div><h4>${v.question.text}</h4><small>切石前锁定，答案不随切法改变。</small></div><div><div class="private-title row"><h4>私人观察</h4><small class="muted">${v.ownClues.length} / 2条</small></div>${clues||'<p class="empty">还没有私人记录。选择石头上的一个区域，再在右侧选择要看颜色、种水还是裂纹。</p>'}</div><div><h4 style="margin-bottom:10px">表达你的判断</h4><div class="speech-controls"><button class="button" type="button" data-act="speak" data-kind="bullish" ${!canSpeak?'disabled':''}>我看好颜色</button><button class="button" type="button" data-act="speak" data-kind="cautious" ${!canSpeak?'disabled':''}>我担心裂纹</button><button class="button" type="button" data-act="speak" data-kind="texture" ${!canSpeak?'disabled':''}>我看好种水</button></div><p class="help-text">${v.speechUsed?'本阶段已发言。电脑会将口头判断作为有限参考。':'每阶段可发言一次、公开一条记录。真实记录可核验，口头判断可能误导。'}</p></div></div></aside>`;
+  }
+  function visibleCells(v) { return v.resolution? v.resolution.cells : v.known; }
+  function stoneSVG(v) {
+    const known=visibleCells(v), revealed=!!v.resolution;
+    const x0=145,y0=89,w=77,h=65;
+    const isWindow=v.phase==='window';
+    const selected=isWindow?(v.owner==='A'?ui.window:v.announcedWindow):ui.cell;
+    const selectedPlan=v.phase==='cut'?(v.owner==='A'?ui.cut:v.announcedCut):v.resolution?.outcome.plan;
+    const cellMarkup=known.map((cell,i)=>{
+      const x=x0+(i%3)*w,y=y0+Math.floor(i/3)*h;
+      const hasColor=Number.isInteger(cell.color),hasQuality=Number.isInteger(cell.quality),hasCrack=Number.isInteger(cell.crack);
+      const colors=['#9ba488','#9eb18a','#78ac6b','#4c9654'];
+      const fill=hasColor?colors[cell.color]:'#59674b';
+      const opacity=hasColor?(.72+(hasQuality?cell.quality*.07:0)):.18;
+      let markup=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" opacity="${opacity}"/>`;
+      if(hasQuality&&cell.quality>=2)markup+=`<path d="M${x+7} ${y+13} Q${x+35} ${y+4} ${x+64} ${y+14}" fill="none" stroke="#e2ebc2" stroke-opacity="${cell.quality===3?'.6':'.3'}" stroke-width="2"/>`;
+      if(hasCrack&&cell.crack>0)markup+=`<path d="M${x+45} ${y+1} ${x+30} ${y+23} ${x+41} ${y+42} ${x+25} ${y+64}" fill="none" stroke="${cell.crack===2?'#172d1c':'#3b5635'}" stroke-width="${cell.crack===2?3.6:1.4}"/>`;
+      return markup;
+    }).join('');
+    const planLines={large:'M137 196 391 196',split:'M260 65 260 303',color:'M150 291 365 77'};
+    const candidate=E.WINDOWS.find(k=>k.cell===selected);
+    return `<svg viewBox="0 0 520 365" role="img" aria-label="${revealed?'原石内部已揭晓，点击1到9区域查看色种裂。':'原石的九个区域；未知位置保留皮壳，已知特征在图中标记。'}"><defs><linearGradient id="rock-fill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8c8a6b"/><stop offset=".45" stop-color="#58674b"/><stop offset="1" stop-color="#2b432f"/></linearGradient><filter id="stone-texture"><feTurbulence baseFrequency=".065" numOctaves="3" seed="${v.public.visualSeed}" result="noise"/><feDiffuseLighting in="noise" lighting-color="#afae8a" surfaceScale="1.5" diffuseConstant=".45" result="light"><feDistantLight azimuth="225" elevation="50"/></feDiffuseLighting><feComposite in="light" in2="SourceGraphic" operator="in"/><feBlend in="SourceGraphic" mode="soft-light"/></filter><clipPath id="stone-mask"><path d="M142 58 222 32 315 58 389 125 406 218 349 296 252 321 161 288 110 208 115 115Z"/></clipPath></defs><ellipse cx="260" cy="335" rx="155" ry="12" fill="#0003"/><path d="M142 58 222 32 315 58 389 125 406 218 349 296 252 321 161 288 110 208 115 115Z" fill="url(#rock-fill)" stroke="#b3be9e88" filter="url(#stone-texture)"/><g clip-path="url(#stone-mask)">${cellMarkup}</g>${v.public.skin.color>=1&&!revealed?'<path d="M195 60q16-11 36-5l-9 12-20 6Z" fill="#74ad6b" opacity=".7"/>':''}${v.public.skin.crack>=1&&!revealed?'<path d="m352 106-15 34 9 24-16 22" fill="none" stroke="#243323" stroke-width="2.8"/>':''}${v.window!==null?`<rect x="${x0+v.window%3*w+3}" y="${y0+Math.floor(v.window/3)*h+3}" width="${w-6}" height="${h-6}" rx="12" fill="none" stroke="#e7d7a2" stroke-width="2.5"/>`:''}${isWindow&&candidate?`<circle cx="${x0+selected%3*w+w/2}" cy="${y0+Math.floor(selected/3)*h+h/2}" r="30" fill="none" stroke="#ead4a0" stroke-width="2" stroke-dasharray="4 4"/>`:''}${selectedPlan&&planLines[selectedPlan]?`<path d="${planLines[selectedPlan]}" fill="none" stroke="#f0cf87" stroke-width="2" stroke-dasharray="7 6"/>`:''}<path d="M88 64h14m-7-7v14M418 294h14m-7-7v14" fill="none" stroke="#6b8662" stroke-width=".7"/></svg>`;
+  }
+  function stonePanel(v) {
+    const cells=visibleCells(v);
+    const windowPhase=v.phase==='window';
+    const selected=windowPhase?(v.owner==='A'?ui.window:v.announcedWindow):ui.cell;
+    const cell=cells[selected??4]||{};
+    const skinColor=['未见明显色','零星见色','多处见色','明显见色'][v.public.skin.color];
+    const skinQuality=['砂感偏粗','砂感普通','砂感偏细','砂感很细'][v.public.skin.quality];
+    const skinCrack=['外皮裂痕少','外皮有裂痕','外皮裂痕多'][v.public.skin.crack];
+    const knownCount=cells.filter(c=>E.FEATURES.some(f=>Number.isInteger(c[f]))).length;
+    const windowCell=v.window!==null?cells[v.window]:null;
+    return `<section class="panel stone-panel"><div class="stone-top"><span>${v.public.code} · ${v.public.mass.toFixed(1)} kg</span><span>${v.owner?`归属：${name(v.owner)}`:'归属：货主'}</span></div><div class="stone-container">${stoneSVG(v)}<div class="cell-overlay" aria-label="选择原石区域">${E.AREAS.map((area,i)=>`<button type="button" class="cell-button ${selected===i?'selected':''} ${E.FEATURES.some(f=>Number.isInteger(cells[i][f]))?'known':''}" data-cell="${i}" aria-label="选择${i+1}号${area}区域" aria-pressed="${selected===i}" ${busy?'disabled':''}>${i+1}</button>`).join('')}</div><span class="stone-title">${v.resolution?'全部内部已揭晓':`已知 ${knownCount} / 9 个局部`}</span>${busy?'<div class="cutting-sweep"></div><div class="cutting-label">解料中 · 内部不会重新生成</div>':''}</div><div class="stone-readout"><span class="loc">${(selected??4)+1} · ${E.AREAS[selected??4]}</span>${E.FEATURES.map(f=>`<span class="readout-item"><em>${E.FEATURE_NAMES[f]}</em>${Number.isInteger(cell[f])?`${cell[f]} ${E.LEVELS[f][cell[f]]}`:'未知'}</span>`).join('')}</div><div class="surface"><span class="pill">${skinColor}</span><span class="pill">${skinQuality}</span><span class="pill">${skinCrack}</span></div>${windowCell?`<div class="window-readout"><strong>公窗 · ${v.window+1} ${E.AREAS[v.window]}</strong><br>色 ${windowCell.color} / 种 ${windowCell.quality} / 裂 ${windowCell.crack} · 所有人都能看到</div>`:''}<div class="stone-legend">色、种 0—3 / 裂 0—2 · 点选区域查看你已知的局部特征</div></section>`;
+  }
+  function budgetInput(v,reserve,minimum,label) {
+    const cash=v.players.find(p=>p.id==='A').cash;
+    const max=Math.max(0,cash-reserve);
+    const error=priceError(v,reserve===500?'bid':'offer');
+    return `<label class="label" for="bid-input">${label}</label><div class="money"><span>游戏币</span><input id="bid-input" type="number" min="0" max="${max}" step="1" inputmode="numeric" value="${esc(ui.bid)}" autocomplete="off" aria-describedby="price-help price-error"></div><p class="subtle" id="price-help">当前最多可报 <strong class="gold number">${fmt(max)}</strong>，需留${reserve}加工费。${minimum>1?`非零报价至少${fmt(minimum)}。`:''}0表示放弃。${minimum>1&&max<minimum?'当前不足起拍门槛，仍可放弃初拍、参与复查与鉴料。':''}</p><div class="error" id="price-error" role="alert">${esc(error)}</div>`;
+  }
+  function sealedList(v,exclude) {
+    return ['B','C','D'].filter(id=>id!==exclude).map(id=>`<div class="sealed"><span>${name(id)} <small class="muted">${P[id].title}</small></span><span class="right">已封标 · 金额保密</span></div>`).join('');
+  }
+  function inspectAction(v) {
+    const used=v.used[v.phase];
+    const known=Number.isInteger(v.known[ui.cell][ui.feature]);
+    const recheck=v.phase==='recheck';
+    const next=recheck?'offer-stage':'bid-stage';
+    const latest=v.ownClues[v.ownClues.length-1];
+    const finding=latest?`${latest.cell+1} · ${E.AREAS[latest.cell]}：${E.FEATURE_NAMES[latest.feature]} ${latest.value}（${E.LEVELS[latest.feature][latest.value]}）`:'';
+    const selector=`<label class="label" for="cell-select">选择调查区域</label><select class="field" id="cell-select">${E.AREAS.map((area,i)=>`<option value="${i}" ${ui.cell===i?'selected':''}>${i+1} · ${area}</option>`).join('')}</select>`;
+    return `<div class="turn-caption">${recheck?'第二次细查 / 全员仍可参与':'第一次细查 / 仅你可见'}</div><h2>${recheck?'新线索出来了，<br>再看一个位置。':'从一个局部，<br>建立你的判断。'}</h2><p class="intro">${recheck?(v.owner==='A'?'你是石主。复查能帮助你决定接盘报价值不值得接受。':'你还可以调查、影响判断，并在下一步提出接盘价。'):'点击石头上的1—9区或选择区域，再选一项细查。你和电脑都只看得到各自得到的线索。'}</p>${used?`<div class="callout">刚刚查到：<br><strong>${finding}</strong><br><span class="subtle">仅你可见，已记入手记；你可以决定是否公开。</span></div><button class="button primary full" type="button" data-act="${next}">${recheck?'进入接盘报价':'参与原石暗拍'} →</button>`:`${selector}<div class="feature-options">${E.FEATURES.map(f=>`<button class="button ${ui.feature===f?'selected':''}" type="button" data-feature="${f}" aria-pressed="${ui.feature===f}">看${E.FEATURE_NAMES[f]}</button>`).join('')}</div><button class="button primary full" type="button" data-act="inspect" ${known?'disabled':''}>${known?'此项已知，请换位置或项目':'确认私人细查 · 1次'}</button><p class="estimate-tip">仅揭露所选位置的一项特征，不提供整块估价。系统记录真实，范围有限。</p><button class="button ghost full" type="button" data-act="${next}">${recheck?'不再细查，直接进入接盘报价':'跳过细查，直接进入暗拍'}</button>`}`;
+  }
+  function actionPanel(v) {
+    let body='',footer='';
+    if(['look','recheck'].includes(v.phase)){
+      body=inspectAction(v);footer='每阶段可以表达一次判断、公开一条真实记录。发言会被电脑作为有限参考，但它们也有自己的信息。';
+    }else if(v.phase==='bid'){
+      body=`<div class="turn-caption">原石暗拍 / 三位电脑已封标</div><h2>为你的判断，<br>出一个实价。</h2><p class="intro">挂牌底价 <strong class="gold">${fmt(v.public.floor)}</strong>。最高有效报价成交，支付自己的金额。你的报价不会改变电脑已封存的暗标。</p>${budgetInput(v,500,v.public.floor,'你的暗拍价')}${sealedList(v)}<div class="actions" style="margin-top:15px"><button class="button primary" type="button" data-act="bid">提交暗标</button><button class="button" type="button" data-act="pass-bid">放弃初拍</button></div>`;footer='同价按每轮轮换的优先位处理。初拍需预留200开窗费和300最终加工费。';
+    }else if(v.phase==='window'){
+      const human=v.owner==='A',cell=human?ui.window:v.announcedWindow;
+      body=`<div class="turn-caption">公开开窗 / ${human?'由你决定位置':name(v.owner)+'决定位置'}</div><h2>${human?'你先买到了。<br>现在开哪里？':`${name(v.owner)}拍下了料。<br>先看他开哪里。`}</h2><p class="intro">${name(v.owner)}以${fmt(v.auction.price)}买入。开一处公窗需200，将向所有人公开该位置的色、种、裂。</p><div class="choice-list">${E.WINDOWS.map((w,i)=>`<button class="choice ${cell===w.cell?'selected':''}" type="button" data-window="${w.cell}" ${!human?'disabled':''} aria-pressed="${cell===w.cell}"><span class="index">0${i+1}</span><span><b>${w.name} · ${w.cell+1}区</b><small>${w.text}</small></span></button>`).join('')}</div><button class="button ${human?'primary':'amber'} full" type="button" data-act="open-window">${human?'确认开公窗 · 200':`观看${name(v.owner)}开窗`}</button>`;footer='开窗只揭露一个区域；其他位置仍未知。你可以从选址和公开结果中重新判断。';
+    }else if(v.phase==='offer'){
+      const human=v.owner==='A';
+      body=`<div class="turn-caption">第二次交易机会 / 接盘报价</div><h2>${human?'有人愿意接手。<br>先看看价格。':'现在，轮到你<br>考虑是否接盘。'}</h2><p class="intro">${human?'你无需向自己报价。揭晓最高报价后，可以接受成交，也可以全部拒绝、自己切石。':`${name(v.owner)}持有原石。你可以根据公窗和自己的新线索报价；报价被接受即付款。`}</p>${human?'':budgetInput(v,300,1,'你的接盘报价')}${sealedList(v,v.owner)}<div class="actions" style="margin-top:16px">${human?'<button class="button primary full" type="button" data-act="reveal-offers">揭晓最高接盘价</button>':'<button class="button primary" type="button" data-act="offer">提交接盘价</button><button class="button" type="button" data-act="pass-offer">放弃接盘</button>'}</div>`;footer='接盘需预留300加工费。每轮只允许转手一次；原石主只能接受最高价或全部拒绝。';
+    }else if(v.phase==='deal'){
+      const high=v.highOffer;
+      body=`<div class="turn-caption">最高报价已公开</div><h2>${high?'这个价格，<br>值得放手吗？':'这一轮，<br>没有人接盘。'}</h2>${high?`<div class="callout">最高报价 · ${name(high.player)}<span class="big number">${fmt(high.price)}</span><span class="subtle">原石主${name(v.auction.player)}若接受，买卖净额为${signed(high.price-v.auction.price-200)}。</span></div>`:'<div class="callout amber">其余玩家均未提交有效接盘价，原石主继续持有。</div>'}${!v.dealDone?`<p class="intro">你可以锁定这笔交易结果，也可以保留原石，自己承担切石的收益与风险。</p><div class="actions"><button class="button amber" type="button" data-act="sell">接受最高价</button><button class="button" type="button" data-act="keep">保留，自己切</button></div>`:`<p class="intro">${v.transfer?`${name(v.transfer.seller)}已接受报价，${name(v.owner)}付款接手。`:`${name(v.owner)}继续持有，将决定最终切法。`}${v.owner==='A'?'你现在负责最终加工。':'你仍可完成鉴料判断，赚取奖励。'}</p><button class="button primary full" type="button" data-act="quiz-stage">进入全员鉴料 →</button>`}`;footer='转手款在两名玩家之间转移，不会给双方重复发放收入。现在的现金变化已经入账。';
+    }else if(v.phase==='quiz'){
+      body=`<div class="turn-caption">全员鉴料 / 三位电脑已锁答案</div><h2>最后一刀之前，<br>锁定你的判断。</h2><div class="callout amber">${v.question.text}</div><p class="intro">${v.question.help} 答对+200，答错或放弃无奖励。${v.owner?'你是否持有原石都能参与。':'本轮流拍，无人承担买料和加工费。'}</p><div class="answer-options"><button class="button ${ui.answer===true?'selected':''}" type="button" data-answer="yes" aria-pressed="${ui.answer===true}">是</button><button class="button ${ui.answer===false?'selected':''}" type="button" data-answer="no" aria-pressed="${ui.answer===false}">否</button></div><button class="button primary full" type="button" data-act="answer" ${ui.answer===undefined?'disabled':''}>锁定答案，进入切石</button><button class="button ghost full" style="margin-top:9px" type="button" data-act="skip-answer">放弃回答，直接看切石</button>`;footer='答案由原石内部的既定事实决定，不随切法变化。锁定后不能依据结果修改。';
+    }else if(v.phase==='cut'){
+      const human=v.owner==='A',chosen=human?ui.cut:v.announcedCut||'split';
+      body=`<div class="turn-caption">最终持有人 / ${v.owner?name(v.owner):'原石流拍，由货主解料'}</div><h2>${human?'留大件，还是<br>先保住能用的料？':v.owner?`${name(v.owner)}决定了。<br>一起等这一刀。`:'货主解料，<br>验证大家的判断。'}</h2><p class="intro">${human?'依据已知线索选择取件路线。回收价取决于真实内部和所选方案，确认后不可撤回。':v.owner?'电脑根据自己获知的信息选择路线。你可以在揭晓后对照它当时的调查记录。':'无人买入，不计玩家加工与回收收入，只发放正确鉴料奖励。'}</p><div class="choice-list">${Object.entries(E.CUTS).map(([key,c],i)=>`<button class="choice ${chosen===key?'selected':''}" type="button" data-cut="${key}" ${!human||busy?'disabled':''} aria-pressed="${chosen===key}"><span class="index">0${i+1}</span><span><b>${c.name}</b><small>${c.short}</small></span></button>`).join('')}</div><button class="button amber full" type="button" data-act="cut" ${busy?'disabled':''}>${busy?'解料中…':human?'确认切石 · 加工费300':v.owner?`观看${name(v.owner)}切石`:'揭晓原石'}</button>`;footer='内部没有重新抽奖。三种路线对完整性、左右材料与局部好色有不同要求。';
+    }else if(v.phase==='result'){
+      const result=v.resolution,gain=result.closing.A-result.opening.A;
+      const correct=typeof result.answers.A==='boolean'&&result.answers.A===result.truth;
+      body=`<div class="turn-caption">第${v.round}轮结束 / 现金已结算</div><h2>${gain>0?'这轮的判断，<br>换来了收益。':gain<0?'这一刀有代价。<br>下一轮再判断。':'你保住了资金。<br>看清再出手。'}</h2><div class="callout ${gain<0?'amber':''}">你的本轮现金变化<span class="big number ${gain<0?'negative':''}">${signed(gain)}</span><span class="subtle">当前现金${fmt(result.closing.A)} · ${correct?'鉴料正确 +200':result.answers.A===null?'已放弃鉴料，无奖励':'鉴料未答对，无奖励'}</span></div><p class="intro">${v.owner?`${name(v.owner)}使用${E.CUTS[result.outcome.plan].name}，成品回收${fmt(result.outcome.value)}。`:'本轮原石流拍，仅结算鉴料奖励。'} 内部与详细账目已在下方公开。</p><button class="button primary full" type="button" data-act="next">${v.round<6?`进入第${v.round+1}轮 →`:'查看六轮最终排名 →'}</button>`;footer='本轮已锁定，不能重切或重报。你可以点选全部区域复盘；新一轮将生成另一块固定原石。';
+    }
+    return `<section class="panel action-panel" aria-label="当前可执行的行动"><div class="action-body">${body}</div><div class="action-footer">${footer}</div></section>`;
+  }
+  function publicFeed(v) {
+    return `<section class="panel feed" id="public-feed"><div class="panel-head row"><h3>公区交流</h3><span class="pill">记录可靠 · 发言自行判断</span></div><div class="feed-list" id="feed-list" aria-label="本轮公开记录">${v.log.map(item=>`<div class="feed-item ${item.type} ${item.author==='SYS'?'system':''}">${item.author==='SYS'?'<span class="system-icon" aria-hidden="true">◇</span>':avatar(item.author)}<div><div class="who">${item.author==='SYS'?'牌局记录':name(item.author)}<span>${item.type==='evidence'?'公开的真实记录':item.type==='speech'?'口头判断':item.type==='window'?'公开开窗':item.type==='trade'?'交易':item.type==='result'?'结算':'公开信息'}</span></div><p class="text">${esc(item.text)}</p></div></div>`).join('')}</div></section>`;
+  }
+  function tableTalk(v) {
+    const latest=['B','C','D'].map(id=>v.claims.filter(c=>c.author===id).slice(-1)[0]).filter(Boolean);
+    return `<section class="table-talk" aria-label="三位电脑当前的公开发言"><div class="table-talk-head"><span>桌上发言 · 口头判断可能误导</span><a href="#public-feed">完整公区记录 ↓</a></div><div class="table-talk-lines">${latest.map(c=>`<p class="table-talk-line" style="margin:0"><b style="color:${P[c.author].color}">${name(c.author)}</b>${esc(c.text)}</p>`).join('')}</div></section>`;
+  }
+  function miniHistory(v) {
+    return `<section class="panel"><div class="panel-head row"><h3>你的逐轮收支</h3><span class="pill">${v.history.length} / 6轮</span></div><div class="mini-history">${v.history.length?v.history.map(r=>{const gain=r.closing.A-r.opening.A;return `<div class="history-row"><span class="r">第${r.round}轮</span><span class="desc">${r.owner?name(r.owner)+'最终出货':'原石流拍'}<br>你期末 ${fmt(r.closing.A)}</span><span class="gain ${gain>=0?'positive':'negative'}">${signed(gain)}</span></div>`;}).join(''):'<p class="empty">第一轮结束后，这里会记录你的实际现金变化。六轮资金连续累计。</p>'}</div></section>`;
+  }
+  function roundResult(v) {
+    const r=v.resolution;
+    if(!r)return '';
+    const rows=v.players.map(p=>{
+      const bonus=typeof r.answers[p.id]==='boolean'&&r.answers[p.id]===r.truth?200:0;
+      const delta=r.closing[p.id]-r.opening[p.id];
+      return `<tr><td>${profileName(p.id)}</td><td class="number">${fmt(r.opening[p.id])}</td><td class="number ${delta-bonus>=0?'positive':'negative'}">${signed(delta-bonus)}</td><td class="positive">${signed(bonus)}</td><td class="number">${fmt(r.closing[p.id])}</td></tr>`;
+    }).join('');
+    return `<section class="panel round-result" id="round-result"><div class="topline"><div><div class="eyebrow" style="margin-bottom:8px">Round ${r.round} / 真实结算</div><h3>${r.owner?`${name(r.owner)}最终出货 ${fmt(r.outcome.value)}`:'原石流拍 · 仅结算鉴料奖励'}</h3><p class="subtle" style="margin-top:7px">鉴料事实：${r.truth?'是':'否'}。${r.owner?r.outcome.reason:'没有买料或加工支出。'}</p></div><div style="text-align:right"><div class="result-gain ${r.closing.A-r.opening.A>=0?'positive':'negative'}">${signed(r.closing.A-r.opening.A)}</div><div class="result-caption">你的本轮净变化</div></div></div><div class="result-columns"><div class="table-scroll"><table class="table"><caption class="sr-only">本轮资金结算</caption><thead><tr><th>玩家</th><th>期初</th><th>买卖净额</th><th>鉴料奖</th><th>期末现金</th></tr></thead><tbody>${rows}</tbody></table></div><div><h4 style="margin-bottom:10px">同一块料，其他路线的实际回收</h4><div class="cut-compare">${Object.entries(r.allCuts).map(([key,out])=>`<div class="compare-row ${r.outcome.plan===key?'chosen':''}"><span>${E.CUTS[key].name}${r.outcome.plan===key?' · 已选择':''}</span><strong>${fmt(out.value)}</strong></div>`).join('')}</div><p class="subtle" style="margin-top:10px">这是切后复盘，不会改变已结算结果。若买入价太高，选对路线也未必盈利。</p></div></div><details class="audit"><summary>局后复盘：三位电脑当时实际查到了什么？</summary><div class="audit-list">${['B','C','D'].map(id=>`<div><strong style="color:${P[id].color}">${name(id)} · ${P[id].title}</strong>${r.audit[id].map(c=>`<p>${c.cell+1} ${E.AREAS[c.cell]}：${E.FEATURE_NAMES[c.feature]}${c.value}（${E.LEVELS[c.feature][c.value]}）</p>`).join('')}<p class="claim-note">鉴料回答：${r.answers[id]?'是':'否'} · ${r.answers[id]===r.truth?'正确':'未答对'}</p></div>`).join('')}</div></details></section>`;
+  }
+
+  function endScreen(v) {
+    const ranked=v.rankings;
+    const you=ranked.find(p=>p.id==='A');
+    const winners=ranked.filter(p=>p.rank===1).map(p=>name(p.id)).join('、');
+    const total=you.cash-10000;
+    const yourFirst=v.history.filter(r=>r.auction?.player==='A').length;
+    const yourSales=v.history.filter(r=>r.transfer?.seller==='A').length;
+    const yourCut=v.history.filter(r=>r.owner==='A').length;
+    const title=you.rank===1?(ranked.filter(p=>p.rank===1).length>1?'你并列获胜。':'这一局，你赢了。'):`这一局，你获得第${you.rank}名。`;
+    return `<section class="end-screen"><div class="end-hero"><div><div class="eyebrow">Six rounds complete / 六轮对局结束</div><h1>${title}</h1><div class="result-score number">${fmt(you.cash)} <small class="muted" style="font-size:13px">期末游戏币</small></div><p style="margin-top:9px">你的累计净变化 <strong class="${total>=0?'positive':'negative'}">${signed(total)}</strong> · 鉴料${you.correct}次正确<br>${you.rank===1?'你把观察、交易和取件变成了最终资产。':`本局胜出：${winners}。下次可以换一种买入时机和切法。`}</p></div><div><div class="actions"><button class="button primary" type="button" data-act="replay">同种子再战</button><button class="button" type="button" data-act="new">换一局</button></div><p class="subtle" style="margin-top:12px">种子 ${esc(v.seed)}<br>同种子固定原石；你的选择会改变交易与结果。</p></div></div><div class="final-ranks" aria-label="最终排名">${ranked.map(p=>`<div class="final-rank ${p.rank===1?'winner':''}"><div class="rank-label">${p.rank===1?'第一名':`第${p.rank}名`}</div><div class="name">${avatar(p.id)}<span>${profileName(p.id)}</span></div><div class="amount number">${fmt(p.cash)}</div><div class="small-note">鉴料${p.correct}次正确 · 净变化${signed(p.cash-10000)}</div></div>`).join('')}</div><div class="end-columns"><section class="panel end-section"><div class="row" style="margin-bottom:14px"><h3>六轮资金走势</h3><span class="pill">真实现金 / 游戏币</span></div><div id="end-chart"></div></section><section class="panel end-section"><h3>你的这场对局</h3><div class="stat-line"><span>初拍拍中</span><strong>${yourFirst}次</strong></div><div class="stat-line"><span>转手卖出</span><strong>${yourSales}次</strong></div><div class="stat-line"><span>最终持有并加工</span><strong>${yourCut}次</strong></div><div class="stat-line"><span>鉴料答对</span><strong>${you.correct} / 6</strong></div><p class="end-notes" style="margin-top:16px">买入和放弃都属于策略。回看每轮资金，判断收益来自低价买入、及时转手、合理取件，还是鉴料积累。</p></section></div><section class="panel end-history"><h3>六轮完整战报</h3><div class="table-scroll"><table class="table"><thead><tr><th>轮次</th><th>初拍得主</th><th>成交价</th><th>最终持有人</th><th>回收价</th><th>你本轮</th><th>A现金</th><th>B现金</th><th>C现金</th><th>D现金</th></tr></thead><tbody>${v.history.map(r=>`<tr><td>第${r.round}轮</td><td>${r.auction?name(r.auction.player):'流拍'}</td><td>${r.auction?fmt(r.auction.price):'—'}</td><td>${r.owner?name(r.owner):'货主'}</td><td>${r.owner?fmt(r.outcome.value):'—'}</td><td class="${r.closing.A-r.opening.A>=0?'positive':'negative'}">${signed(r.closing.A-r.opening.A)}</td>${E.IDS.map(id=>`<td class="number">${fmt(r.closing[id])}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="subtle" style="margin-top:14px">先比较期末现金，再比较鉴料正确次数；两项都相同则并列。每轮的转手款在玩家之间转移，不是额外的系统奖励。</p></section></section>`;
+  }
+  function drawEndChart(v) {
+    const box=$('end-chart');if(!box)return;
+    const width=Math.max(260,Math.floor(box.getBoundingClientRect().width));
+    const height=width<400?235:270;
+    const l=47,r=13,t=38,b=30;
+    const series=[Object.fromEntries(E.IDS.map(id=>[id,10000])),...v.history.map(h=>h.closing)];
+    const values=series.flatMap(row=>Object.values(row));
+    const low=Math.floor(Math.min(...values,9500)/1000)*1000;
+    const high=Math.ceil(Math.max(...values,11000)/1000)*1000;
+    const x=n=>l+n/6*(width-l-r),y=n=>t+(high-n)/(high-low)*(height-t-b);
+    const ticks=Array.from({length:4},(_,i)=>low+(high-low)*i/3);
+    box.innerHTML=`<svg class="chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="四名玩家六轮现金走势，最终${v.rankings.filter(p=>p.rank===1).map(p=>name(p.id)).join('、')}获胜。"><g font-family="system-ui,sans-serif" font-size="10">${E.IDS.map((id,i)=>`<circle cx="${l+i*(width-l-r)/4}" cy="10" r="3" fill="${P[id].color}"/><text x="${l+8+i*(width-l-r)/4}" y="14" fill="${P[id].color}">${id=== 'A'?'你':name(id)}</text>`).join('')}${ticks.map(n=>`<line x1="${l}" x2="${width-r}" y1="${y(n)}" y2="${y(n)}" stroke="#35483a" stroke-width=".7"/><text x="${l-8}" y="${y(n)+3}" text-anchor="end" fill="#afbdad">${(n/1000).toFixed(1)}k</text>`).join('')}${series.map((_,i)=>`<text x="${x(i)}" y="${height-8}" text-anchor="middle" fill="#afbdad">${i===0?'开局':i}</text>`).join('')}${E.IDS.map(id=>`<polyline points="${series.map((s,i)=>`${x(i)},${y(s[id])}`).join(' ')}" stroke="${P[id].color}" stroke-width="2" fill="none"/><circle cx="${x(6)}" cy="${y(series[6][id])}" r="3" fill="${P[id].color}"/>`).join('')}</g></svg>`;
+  }
+  function render() {
+    if(!game){lobby();return;}
+    const v=game.view();
+    $('app').dataset.phase=v.phase;
+    $('app').dataset.round=String(v.round);
+    if(v.phase==='end'){$('app').innerHTML=endScreen(v);drawEndChart(v);return;}
+    $('app').innerHTML=`<div class="game-meta"><h1>第${v.round}轮 <span class="muted">/ 6</span><small>${v.phase==='result'?'已清算，等待下一轮':'你控制A · 其他三位独立行动'}</small></h1><div class="game-seed">种子 ${esc(v.seed)}<br>最高现金获胜 · 同分比鉴料</div></div>${scoreCards(v)}${phaseTrack(v)}${tableTalk(v)}<div class="game-board">${notebook(v)}${stonePanel(v)}${actionPanel(v)}</div>${v.phase==='result'?roundResult(v):''}<div class="bottom-grid">${publicFeed(v)}${miniHistory(v)}</div><div class="hint-strip"><span>私人手记只属于你；公窗和已公开的真实记录供全员使用。电脑不读取原石真值。</span><span><a href="#" data-act="help">查看规则与三种取件条件</a></span></div>`;
+    const feed=$('feed-list');if(feed)feed.scrollTop=feed.scrollHeight;
+  }
+  function priceError(v,kind) {
+    const n=ui.bid===''?0:Number(ui.bid);
+    const reserve=kind==='bid'?500:300;
+    const min=kind==='bid'?v.public.floor:1;
+    const cash=v.players.find(p=>p.id==='A').cash;
+    if(!Number.isSafeInteger(n)||n<0)return '报价须为非负整数。';
+    if(n>0&&n<min)return `报价至少${fmt(min)}，也可以放弃。`;
+    if(n>0&&n>cash-reserve)return `须留足${reserve}加工费，最多可报${fmt(Math.max(0,cash-reserve))}。`;
+    return '';
+  }
+  function openNew() {
+    if(!game){initialSeed=randomSeed();lobby();return;}
+    $('new-seed').value=randomSeed();$('new-dialog').showModal();
+  }
+  document.addEventListener('input',event=>{
+    if(event.target.id==='seed-input')initialSeed=event.target.value;
+    if(event.target.id==='bid-input'){
+      ui.bid=event.target.value;
+      const kind=game.phase==='bid'?'bid':'offer';
+      const error=priceError(game.view(),kind);
+      if($('price-error'))$('price-error').textContent=error;
+      const button=document.querySelector(`[data-act="${kind}"]`);if(button)button.disabled=!!error;
+    }
+  });
+  document.addEventListener('change',event=>{
+    if(event.target.id==='cell-select'){ui.cell=Number(event.target.value);render();}
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.target.id==='bid-input'&&event.key==='Enter'){
+      event.preventDefault();const kind=game.phase==='bid'?'bid':'offer';
+      if(!priceError(game.view(),kind))act(()=>kind==='bid'?game.bid(Number(ui.bid)||0):game.offer(Number(ui.bid)||0));
+    }
+  });
+  document.addEventListener('click',async event=>{
+    const el=event.target.closest('[data-act],[data-cell],[data-feature],[data-window],[data-cut],[data-answer]');
+    if(!el||el.disabled)return;
+    if(el.tagName==='A')event.preventDefault();
+    const action=el.dataset.act;
+    if(busy&&action!=='help'&&action!=='close-help')return;
+    if(el.dataset.cell!==undefined){
+      const cell=Number(el.dataset.cell);
+      if(game.phase==='window'&&game.view().owner==='A'){
+        if(E.WINDOWS.some(w=>w.cell===cell))ui.window=cell;
+        else{toast('公窗请选择上缘2区、右侧6区或底部8区。');return;}
+      }else ui.cell=cell;
+      render();return;
+    }
+    if(el.dataset.feature){ui.feature=el.dataset.feature;render();return;}
+    if(el.dataset.window){ui.window=Number(el.dataset.window);render();return;}
+    if(el.dataset.cut){ui.cut=el.dataset.cut;render();return;}
+    if(el.dataset.answer){ui.answer=el.dataset.answer==='yes';render();return;}
+    switch(action){
+      case 'help':if(!$('help-dialog').open)$('help-dialog').showModal();break;
+      case 'close-help':$('help-dialog').close();break;
+      case 'new':openNew();break;
+      case 'close-new':$('new-dialog').close();break;
+      case 'random-lobby':initialSeed=randomSeed();$('seed-input').value=initialSeed;break;
+      case 'random-new':$('new-seed').value=randomSeed();break;
+      case 'start':start($('seed-input').value);break;
+      case 'start-new':start($('new-seed').value);break;
+      case 'replay':start(game.seed);break;
+      case 'inspect':act(()=>game.inspect(ui.cell,ui.feature),'私人观察已记入你的手记。');break;
+      case 'share':act(()=>game.share(el.dataset.record),'这条真实记录已公开，所有人都可使用。');break;
+      case 'speak':act(()=>game.speak(el.dataset.kind),'你的判断已出现在公区。');break;
+      case 'bid-stage':act(()=>game.goBid());break;
+      case 'bid':act(()=>game.bid(Number(ui.bid)||0));break;
+      case 'pass-bid':act(()=>game.bid(0));break;
+      case 'open-window':act(()=>game.openWindow(game.view().owner==='A'?ui.window:undefined));break;
+      case 'offer-stage':act(()=>game.goOffer());break;
+      case 'offer':act(()=>game.offer(Number(ui.bid)||0));break;
+      case 'pass-offer':act(()=>game.offer(0));break;
+      case 'reveal-offers':act(()=>game.revealOffers());break;
+      case 'sell':act(()=>game.decideDeal(true));break;
+      case 'keep':act(()=>game.decideDeal(false));break;
+      case 'quiz-stage':act(()=>game.goQuiz());break;
+      case 'answer':if(ui.answer!==undefined)act(()=>game.answer(ui.answer));break;
+      case 'skip-answer':act(()=>game.answer(null));break;
+      case 'cut':{
+        busy=true;render();
+        await new Promise(resolve=>setTimeout(resolve,620));
+        busy=false;
+        act(()=>game.cut(game.view().owner==='A'?ui.cut:undefined));
+        break;
+      }
+      case 'next':act(()=>game.nextRound());if(game.phase==='look'||game.phase==='end')$('app').scrollIntoView({block:'start',behavior:'smooth'});break;
+    }
+  });
+  let resizeTimer;
+  window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(game?.phase==='end')drawEndChart(game.view());},120);});
+  render();
+})();
+
+  </script>
+</body>
+</html>
